@@ -544,16 +544,23 @@ char *yytext;
 #line 2 "lexics.l"
 #include "ast.hpp"
 #include "grammar.tab.hpp"
+
 #include <string>
 #include <cstring>
 
 void yyerror(const char*);
 extern "C" int yywrap() { return 1; }
+
+void next_line();
+std::string yystring();
+void next_token(const std::string&);
+
 using namespace std;
 
 #define SAVE_TOKEN yylval.string_ = new luna_string(new std::string(yytext))
-#line 556 "lex.yy.c"
-#line 557 "lex.yy.c"
+
+#line 563 "lex.yy.c"
+#line 564 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -770,9 +777,10 @@ YY_DECL
 		}
 
 	{
-#line 14 "lexics.l"
+#line 21 "lexics.l"
 
-#line 776 "lex.yy.c"
+
+#line 784 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -831,363 +839,373 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 15 "lexics.l"
-{  return KW_AS; }
+#line 23 "lexics.l"
+{ next_token(yystring()); return KW_AS; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 16 "lexics.l"
-{  return KW_CF; }
+#line 24 "lexics.l"
+{ next_token(yystring()); return KW_CF; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 17 "lexics.l"
-{  return KW_DF; }
+#line 25 "lexics.l"
+{ next_token(yystring()); return KW_DF; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 18 "lexics.l"
-{ return KW_IMPORT; }
+#line 26 "lexics.l"
+{ next_token(yystring()); return KW_IMPORT; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 19 "lexics.l"
-{  return KW_FOR; }
+#line 27 "lexics.l"
+{ next_token(yystring()); return KW_FOR; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 20 "lexics.l"
-{  return KW_IF; }
+#line 28 "lexics.l"
+{ next_token(yystring()); return KW_IF; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 21 "lexics.l"
-{  return KW_ELSE; }
+#line 29 "lexics.l"
+{ next_token(yystring()); return KW_ELSE; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 22 "lexics.l"
-{  return KW_LET; }
+#line 30 "lexics.l"
+{ next_token(yystring()); return KW_LET; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 23 "lexics.l"
-{  return KW_IN; }
+#line 31 "lexics.l"
+{ next_token(yystring()); return KW_IN; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 24 "lexics.l"
-{  return KW_OUT; }
+#line 32 "lexics.l"
+{ next_token(yystring()); return KW_OUT; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 25 "lexics.l"
-{  return KW_SIZE; }
+#line 33 "lexics.l"
+{ next_token(yystring()); return KW_SIZE; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 26 "lexics.l"
-{  return KW_SUB; }
+#line 34 "lexics.l"
+{ next_token(yystring()); return KW_SUB; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 27 "lexics.l"
-{  return KW_WHILE; }
+#line 35 "lexics.l"
+{ next_token(yystring()); return KW_WHILE; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 28 "lexics.l"
-{  return KW_INT; }
+#line 36 "lexics.l"
+{ next_token(yystring()); return KW_INT; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 29 "lexics.l"
-{  return KW_REAL; }
+#line 37 "lexics.l"
+{ next_token(yystring()); return KW_REAL; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 30 "lexics.l"
-{  return KW_STRING; }
+#line 38 "lexics.l"
+{ next_token(yystring()); return KW_STRING; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 31 "lexics.l"
-{  return KW_NAME; }
+#line 39 "lexics.l"
+{ next_token(yystring()); return KW_NAME; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 32 "lexics.l"
-{  return KW_VALUE; }
+#line 40 "lexics.l"
+{ next_token(yystring()); return KW_VALUE; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 33 "lexics.l"
-{  return KW_RUSH; }
+#line 41 "lexics.l"
+{ next_token(yystring()); return KW_RUSH; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 34 "lexics.l"
-{  return KW_STATIC; }
+#line 42 "lexics.l"
+{ next_token(yystring()); return KW_STATIC; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 35 "lexics.l"
-{  return KW_STATIC_FOR; }
+#line 43 "lexics.l"
+{ next_token(yystring()); return KW_STATIC_FOR; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 36 "lexics.l"
-{  return KW_UNROLLING; }
+#line 44 "lexics.l"
+{ next_token(yystring()); return KW_UNROLLING; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 37 "lexics.l"
-{  return KW_CUDA;}
+#line 45 "lexics.l"
+{ next_token(yystring()); return KW_CUDA;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 38 "lexics.l"
-{  return KW_NOCPU;}
+#line 46 "lexics.l"
+{ next_token(yystring()); return KW_NOCPU;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 40 "lexics.l"
-{  return BUCK; }
+#line 48 "lexics.l"
+{ next_token(yystring()); return BUCK; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 41 "lexics.l"
-{  return AMP; }
+#line 49 "lexics.l"
+{ next_token(yystring()); return AMP; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 42 "lexics.l"
-{  return EQ; }
+#line 50 "lexics.l"
+{ next_token(yystring()); return EQ; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 43 "lexics.l"
-{  return LT; }
+#line 51 "lexics.l"
+{ next_token(yystring()); return LT; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 44 "lexics.l"
-{  return GT; }
+#line 52 "lexics.l"
+{ next_token(yystring()); return GT; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 45 "lexics.l"
-{  return SCOLON; }
+#line 53 "lexics.l"
+{ next_token(yystring()); return SCOLON; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 46 "lexics.l"
-{  return COLON; }
+#line 54 "lexics.l"
+{ next_token(yystring()); return COLON;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 47 "lexics.l"
-{  return QMARK; }
+#line 55 "lexics.l"
+{ next_token(yystring()); return QMARK;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 48 "lexics.l"
-{  return COMMA; }
+#line 56 "lexics.l"
+{ next_token(yystring()); return COMMA; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 49 "lexics.l"
-{  return DOT; }
+#line 57 "lexics.l"
+{ next_token(yystring()); return DOT; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 50 "lexics.l"
-{  return DIAP; }
+#line 58 "lexics.l"
+{ next_token(yystring()); return DIAP; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 51 "lexics.l"
-{  return LCB; }
+#line 59 "lexics.l"
+{ next_token(yystring()); return LCB; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 52 "lexics.l"
-{  return RCB; }
+#line 60 "lexics.l"
+{ next_token(yystring()); return RCB; }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 53 "lexics.l"
-{  return LB; }
+#line 61 "lexics.l"
+{ next_token(yystring()); return LB; }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 54 "lexics.l"
-{  return RB; }
+#line 62 "lexics.l"
+{ next_token(yystring()); return RB; }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 55 "lexics.l"
-{  return LSB; }
+#line 63 "lexics.l"
+{ next_token(yystring()); return LSB; }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 56 "lexics.l"
-{  return RSB; }
+#line 64 "lexics.l"
+{ next_token(yystring()); return RSB; }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 57 "lexics.l"
-{  return PLUS; }
+#line 65 "lexics.l"
+{ next_token(yystring()); return PLUS; }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 58 "lexics.l"
-{  return MINUS; }
+#line 66 "lexics.l"
+{ next_token(yystring()); return MINUS; }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 59 "lexics.l"
-{  return MUL; }
+#line 67 "lexics.l"
+{ next_token(yystring()); return MUL; }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 60 "lexics.l"
-{  return DIV; }
+#line 68 "lexics.l"
+{ next_token(yystring()); return DIV; }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 61 "lexics.l"
-{  return MOD; }
+#line 69 "lexics.l"
+{ next_token(yystring()); return MOD; }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 62 "lexics.l"
-{  return SHARP; }
+#line 70 "lexics.l"
+{ next_token(yystring()); return SHARP; }
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 63 "lexics.l"
-{  return AT; }
+#line 71 "lexics.l"
+{ next_token(yystring()); return AT; }
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 64 "lexics.l"
-{  return DBLEQ; }
+#line 72 "lexics.l"
+{ next_token(yystring()); return DBLEQ; }
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 65 "lexics.l"
-{  return LEQ; }
+#line 73 "lexics.l"
+{ next_token(yystring()); return LEQ; }
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 66 "lexics.l"
-{  return EQG; }
+#line 74 "lexics.l"
+{ next_token(yystring()); return EQG; }
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 67 "lexics.l"
-{  return GEQ; }
+#line 75 "lexics.l"
+{ next_token(yystring()); return GEQ; }
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 68 "lexics.l"
-{  return NEQ; }
+#line 76 "lexics.l"
+{ next_token(yystring()); return NEQ; }
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 69 "lexics.l"
-{  return DBLAMP; }
+#line 77 "lexics.l"
+{ next_token(yystring()); return DBLAMP; }
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 70 "lexics.l"
-{  return DBLPIPE; }
+#line 78 "lexics.l"
+{ next_token(yystring()); return DBLPIPE; }
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 71 "lexics.l"
-{  return ARROW; }
+#line 79 "lexics.l"
+{ next_token(yystring()); return ARROW; }
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 72 "lexics.l"
-{  return LARROW; }
+#line 80 "lexics.l"
+{ next_token(yystring()); return LARROW; }
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 73 "lexics.l"
-{  return LARR; }
+#line 81 "lexics.l"
+{ next_token(yystring()); return LARR; }
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 74 "lexics.l"
-{  return RARR; }
+#line 82 "lexics.l"
+{ next_token(yystring()); return RARR; }
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 75 "lexics.l"
-{  return KW_CPP; }
+#line 83 "lexics.l"
+{ next_token(yystring()); return KW_CPP; }
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 76 "lexics.l"
-{  return KW_BLOCK; }
+#line 84 "lexics.l"
+{ next_token(yystring()); return KW_BLOCK; }
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 78 "lexics.l"
-{ return INT; }
+#line 86 "lexics.l"
+{
+	next_token(yystring());
+	return INT;
+}
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 80 "lexics.l"
-{ return REAL;}
+#line 91 "lexics.l"
+{
+	next_token(yystring()); 
+	return REAL;
+}
 	YY_BREAK
 case 64:
 *yy_cp = (yy_hold_char); /* undo effects of setting up yytext */
 (yy_c_buf_p) = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 82 "lexics.l"
-{ }
+#line 96 "lexics.l"
+{ next_token(yystring()); /* comments */ }
 	YY_BREAK
 case 65:
 /* rule 65 can match eol */
 YY_RULE_SETUP
-#line 83 "lexics.l"
-{ return STRING; }
+#line 98 "lexics.l"
+{ 
+	next_token(yystring());
+	return STRING; 
+}
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
-#line 85 "lexics.l"
+#line 103 "lexics.l"
 {
 	SAVE_TOKEN;
- 	return NAME;
+	next_token(yystring()); 
+	return NAME;
 }
 	YY_BREAK
 case 67:
 /* rule 67 can match eol */
 YY_RULE_SETUP
-#line 90 "lexics.l"
-{}
+#line 109 "lexics.l"
+{ next_line(); next_token(yystring()); }
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
-#line 92 "lexics.l"
-{ }
+#line 111 "lexics.l"
+{ next_token(yystring()); }
 	YY_BREAK
 case 69:
 YY_RULE_SETUP
-#line 94 "lexics.l"
-{ yyerror("invalid symbol"); }
+#line 113 "lexics.l"
+{ yyerror((string("invalid symbol: ") + yystring()).c_str()); }
 	YY_BREAK
 case 70:
 YY_RULE_SETUP
-#line 96 "lexics.l"
+#line 115 "lexics.l"
 ECHO;
 	YY_BREAK
-#line 1191 "lex.yy.c"
+#line 1209 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2192,8 +2210,34 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 96 "lexics.l"
+#line 115 "lexics.l"
 
+
+extern int cur_position_in_line;
+extern int line_num;
+extern string line;
+extern string prev_line;
+
+void next_line() {
+	if (!line.empty()) {
+		prev_line = line;
+	}
+	line = "";
+	line_num++;
+}
+
+void next_token(const std::string &s) {
+	yylloc.first_column = cur_position_in_line;
+	
+	cur_position_in_line += s.size();
+	line += s;
+
+	yylloc.last_column = cur_position_in_line;
+}
+
+std::string yystring() {
+	return std::string(yytext, yyleng);
+}
 
 void yyerror(const char* msg) {
 	printf("%s\n", msg);

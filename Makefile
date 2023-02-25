@@ -7,8 +7,8 @@ bison: grammar.ypp
 	bison -d grammar.ypp
 
 analyzer: grammar.tab.cpp lex.yy.c main.cpp
-	g++ -std=c++11 lex.yy.c grammar.tab.cpp main.cpp -o a.out
+	g++ -std=c++11 lex.yy.c grammar.tab.cpp main.cpp ast_analyzer.cpp -o a.out
 
 clean: 
-	rm grammar.tab.cpp lex.yy.c grammar.tab.hpp
+	rm grammar.tab.cpp lex.yy.c ast_analyzer.cpp 
 

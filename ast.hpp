@@ -6,12 +6,13 @@
 #include <vector>
 
 class Base {
+public:
     unsigned int first_line;
     unsigned int last_line;
     unsigned int first_column;
     unsigned int last_column;
-    // public:
-    // virtual luna_string to_string() = 0;
+    
+    virtual std::string to_string() {}
 };
 
 class expr : public Base {};
@@ -20,7 +21,7 @@ class luna_string : public expr {
     public:
         std::string* value_;
         luna_string(std::string* value) : value_(value) {
-            std::cerr << "string Ctor\n";
+            // // std::cerr << "string Ctor: " << *value << std::endl;
         } 
 
         luna_string() : value_(new std::string()) {}
@@ -293,10 +294,10 @@ class import_def : public sub_def {
         import_def(luna_string* cxx_id, opt_ext_params* params, luna_string* luna_id) 
             : cxx_code_id_(cxx_id), params_(params), luna_code_id_(luna_id) 
             {
-                std::cerr << "import Ctor\n";
-                std::cerr << cxx_code_id_->value_ << std::endl;
-                std::cerr << params_->seq_ << std::endl;
-                std::cerr << luna_code_id_->value_ << std::endl;
+                // std::cerr << "import Ctor\n";
+                // std::cerr << cxx_code_id_->value_ << std::endl;
+                // std::cerr << params_->seq_ << std::endl;
+                // std::cerr << luna_code_id_->value_ << std::endl;
             }
 
         import_def() : cxx_code_id_(new luna_string()),
@@ -339,9 +340,6 @@ class cxx_block_def : public sub_def {
         cxx_block_def(luna_string* id) : name_(id) {}
 };
 
-
-
-
 class if_statement : public statement {
     public:
         expr *expr_;
@@ -375,6 +373,7 @@ class assign_seq : public Base {
     public:
         std::vector<assign* >* assign_seq_;
         assign_seq(std::vector<assign* >* assign_seq) : assign_seq_(assign_seq) {}
+        assign_seq() : assign_seq_(new std::vector<assign* >()) {}
 };
 
 class let_statement : public statement {
@@ -411,6 +410,7 @@ class exprs_seq : public Base {
     public:
         std::vector<expr* >* expr_;
         exprs_seq(std::vector<expr* >* expr) : expr_(expr) {}
+        exprs_seq() : expr_(new std::vector<expr* >()) {}
 };
 
 class opt_exprs : public Base {
@@ -465,6 +465,7 @@ class id_seq : public Base {
     public:
         std::vector<id*>* seq_;
         id_seq(std::vector<id*>* seq) : seq_(seq) {}
+        id_seq() : seq_(new std::vector<id*>()) {}
 };
 
 class behv_pragma_eq : public behv_pragma {
@@ -489,6 +490,7 @@ class behv_pragma_id_seq : public behv_pragma {
         luna_string *name_;
         id_seq *id_seq_;
         behv_pragma_id_seq(luna_string *name, id_seq *id_seq) : name_(name), id_seq_(id_seq) {}
+        behv_pragma_id_seq() : name_(new luna_string()), id_seq_(new id_seq()) {}
 };
 
 class behv_pragma_expr : public behv_pragma {

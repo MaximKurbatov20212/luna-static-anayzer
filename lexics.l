@@ -1,99 +1,144 @@
 %{
 #include "ast.hpp"
 #include "grammar.tab.hpp"
+
 #include <string>
 #include <cstring>
 
 void yyerror(const char*);
 extern "C" int yywrap() { return 1; }
+
+void next_line();
+std::string yystring();
+void next_token(const std::string&);
+
 using namespace std;
 
 #define SAVE_TOKEN yylval.string_ = new luna_string(new std::string(yytext))
+
 %}
 
 %%
-as {  return KW_AS; }
-cf {  return KW_CF; }
-df {  return KW_DF; }
-import { return KW_IMPORT; }
-for {  return KW_FOR; }
-if {  return KW_IF; }
-else {  return KW_ELSE; }
-let {  return KW_LET; }
-in {  return KW_IN; }
-out {  return KW_OUT; }
-SIZE {  return KW_SIZE; }
-sub {  return KW_SUB; }
-while {  return KW_WHILE; }
-int {  return KW_INT; }
-real {  return KW_REAL; }
-string {  return KW_STRING; }
-name {  return KW_NAME; }
-value {  return KW_VALUE; }
-rush {  return KW_RUSH; }
-static {  return KW_STATIC; }
-static_for {  return KW_STATIC_FOR; }
-unrolling {  return KW_UNROLLING; }
-CUDA {  return KW_CUDA;}
-NOCPU {  return KW_NOCPU;}
 
-"$" {  return BUCK; }
-"&" {  return AMP; }
-"=" {  return EQ; }
-"<" {  return LT; }
-">" {  return GT; }
-";" {  return SCOLON; }
-":" {  return COLON; }
-"?" {  return QMARK; }
-"," {  return COMMA; }
-"." {  return DOT; }
-".." {  return DIAP; }
-"{" {  return LCB; }
-"}" {  return RCB; }
-"(" {  return LB; }
-")" {  return RB; }
-"[" {  return LSB; }
-"]" {  return RSB; }
-"+" {  return PLUS; }
-"-" {  return MINUS; }
-"*" {  return MUL; }
-"/" {  return DIV; }
-"%" {  return MOD; }
-"#" {  return SHARP; }
-"@" {  return AT; }
-"==" {  return DBLEQ; }
-"<=" {  return LEQ; }
-"=>" {  return EQG; }
-">=" {  return GEQ; }
-"!=" {  return NEQ; }
-"&&" {  return DBLAMP; }
-"||" {  return DBLPIPE; }
-"-->" {  return ARROW; }
-"<--" {  return LARROW; }
-"<<" {  return LARR; }
-">>" {  return RARR; }
-"C++" {  return KW_CPP; }
-"__block" {  return KW_BLOCK; }
+as { next_token(yystring()); return KW_AS; }
+cf { next_token(yystring()); return KW_CF; }
+df { next_token(yystring()); return KW_DF; }
+import { next_token(yystring()); return KW_IMPORT; }
+for { next_token(yystring()); return KW_FOR; }
+if { next_token(yystring()); return KW_IF; }
+else { next_token(yystring()); return KW_ELSE; }
+let { next_token(yystring()); return KW_LET; }
+in { next_token(yystring()); return KW_IN; }
+out { next_token(yystring()); return KW_OUT; }
+SIZE { next_token(yystring()); return KW_SIZE; }
+sub { next_token(yystring()); return KW_SUB; }
+while { next_token(yystring()); return KW_WHILE; }
+int { next_token(yystring()); return KW_INT; }
+real { next_token(yystring()); return KW_REAL; }
+string { next_token(yystring()); return KW_STRING; }
+name { next_token(yystring()); return KW_NAME; }
+value { next_token(yystring()); return KW_VALUE; }
+rush { next_token(yystring()); return KW_RUSH; }
+static { next_token(yystring()); return KW_STATIC; }
+static_for { next_token(yystring()); return KW_STATIC_FOR; }
+unrolling { next_token(yystring()); return KW_UNROLLING; }
+CUDA { next_token(yystring()); return KW_CUDA;}
+NOCPU { next_token(yystring()); return KW_NOCPU;}
 
-[0-9]+ { return INT; }
+"$" { next_token(yystring()); return BUCK; }
+"&" { next_token(yystring()); return AMP; }
+"=" { next_token(yystring()); return EQ; }
+"<" { next_token(yystring()); return LT; }
+">" { next_token(yystring()); return GT; }
+";" { next_token(yystring()); return SCOLON; }
+":" { next_token(yystring()); return COLON;}
+"?" { next_token(yystring()); return QMARK;}
+"," { next_token(yystring()); return COMMA; }
+"." { next_token(yystring()); return DOT; }
+".." { next_token(yystring()); return DIAP; }
+"{" { next_token(yystring()); return LCB; }
+"}" { next_token(yystring()); return RCB; }
+"(" { next_token(yystring()); return LB; }
+")" { next_token(yystring()); return RB; }
+"[" { next_token(yystring()); return LSB; }
+"]" { next_token(yystring()); return RSB; }
+"+" { next_token(yystring()); return PLUS; }
+"-" { next_token(yystring()); return MINUS; }
+"*" { next_token(yystring()); return MUL; }
+"/" { next_token(yystring()); return DIV; }
+"%" { next_token(yystring()); return MOD; }
+"#" { next_token(yystring()); return SHARP; }
+"@" { next_token(yystring()); return AT; }
+"==" { next_token(yystring()); return DBLEQ; }
+"<=" { next_token(yystring()); return LEQ; }
+"=>" { next_token(yystring()); return EQG; }
+">=" { next_token(yystring()); return GEQ; }
+"!=" { next_token(yystring()); return NEQ; }
+"&&" { next_token(yystring()); return DBLAMP; }
+"||" { next_token(yystring()); return DBLPIPE; }
+"-->" { next_token(yystring()); return ARROW; }
+"<--" { next_token(yystring()); return LARROW; }
+"<<" { next_token(yystring()); return LARR; }
+">>" { next_token(yystring()); return RARR; }
+"C++" { next_token(yystring()); return KW_CPP; }
+"__block" { next_token(yystring()); return KW_BLOCK; }
 
-[0-9]+"."[0-9]+ { return REAL;}
+[0-9]+ {
+	next_token(yystring());
+	return INT;
+}
 
-\/\/.*$ { }
-\"[^\"]*\" { return STRING; }
+[0-9]+"."[0-9]+ {
+	next_token(yystring()); 
+	return REAL;
+}
+
+\/\/.*$ { next_token(yystring()); /* comments */ }
+
+\"[^\"]*\" { 
+	next_token(yystring());
+	return STRING; 
+}
 
 [A-Za-z_][A-Za-z0-9_]* {
 	SAVE_TOKEN;
- 	return NAME;
+	next_token(yystring()); 
+	return NAME;
 }
 
-\n {}
+\n { next_line(); next_token(yystring()); }
 
-[ \t]+ { }
+[ \t]+ { next_token(yystring()); }
 
-. { yyerror("invalid symbol"); }
+. { yyerror((string("invalid symbol: ") + yystring()).c_str()); }
 
 %%
+
+extern int cur_position_in_line;
+extern int line_num;
+extern string line;
+extern string prev_line;
+
+void next_line() {
+	if (!line.empty()) {
+		prev_line = line;
+	}
+	line = "";
+	line_num++;
+}
+
+void next_token(const std::string &s) {
+	yylloc.first_column = cur_position_in_line;
+	
+	cur_position_in_line += s.size();
+	line += s;
+
+	yylloc.last_column = cur_position_in_line;
+}
+
+std::string yystring() {
+	return std::string(yytext, yyleng);
+}
 
 void yyerror(const char* msg) {
 	printf("%s\n", msg);

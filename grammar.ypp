@@ -21,7 +21,11 @@ using namespace std;
 extern int yylex(void);
 void yyerror(const char*);
 
-program* ast;
+extern int line_num; 
+extern string line, prev_line; 
+
+int cur_position_in_line = 0;
+extern program* ast;
 
 error_reporter reporter;
 
@@ -146,20 +150,28 @@ error_reporter reporter;
 
 %%
 
-all:
-	| program { ast = $1; }
+all: 
+	program { 
+        ast = $1;
+    }
+    |
+    {
+        ////std::cerr << "whitespace\n";
+    }
 
 // TODO: use std::move
 program:    
     sub_def {
         $$ = new program();
         $$->sub_defs->push_back($1);
+        // //std::cerr << "program\n";
     }
 	
     | program sub_def { 
         $$ = new program();
         $$->sub_defs->insert($$->sub_defs->end(), $1->sub_defs->begin(), $1->sub_defs->end()); 
         $$->sub_defs->push_back($2);
+        ////std::cerr << "program sub_def\n";
     };
 
 sub_def:
@@ -167,6 +179,7 @@ sub_def:
     // sub main() {}
 	KW_SUB control_pragma code_id opt_params block {
         $$ = new luna_sub_def($2, $3, $4, $5);
+        ////std::cerr <<  "luna_sub_def\n";
     }
 
     // C++ sub codeid opt_params __block (int)
@@ -176,7 +189,7 @@ sub_def:
 
     // import init(params) as init;
 	| KW_IMPORT code_id LB opt_ext_params RB KW_AS code_id SCOLON {
-        std::cerr << "import\n";
+        ////std::cerr << "import\n";
         $$ = new import_def($2, $4, $7);
     }
 
@@ -196,13 +209,16 @@ sub_def:
     }
 	;
 
-opt_ext_params: 
-    ext_params_seq { $$->seq_ = $1; }
+opt_ext_params:
+    ext_params_seq { $$ = new opt_ext_params($1); }
 	| { $$ = new opt_ext_params(nullptr); }
 	;
 
 ext_params_seq:
-	code_df_param  { $$->params_->push_back($1); } // todo : change reaction
+	code_df_param  { 
+        $$ = new ext_params_seq();
+        $$->params_->push_back($1);
+    }
 	| ext_params_seq COMMA code_df_param {
         $$->params_->insert($$->params_->end(), $1->params_->begin(), $1->params_->end()); 
         $$->params_->push_back($3);
@@ -210,10 +226,12 @@ ext_params_seq:
 	;
 
 code_df_param:
-    type code_df { $$ = new code_df_param($1, $2); }
-    /* | error SCOLON {
-	    reporter.report(line, line_num, @1.first_column + 1, "int, string, value, real, name");
-	} */
+    type code_df {
+        $$ = new code_df_param($1, $2);
+    }
+    | error SCOLON {
+	    reporter.report(ERROR_LEVEL::ERROR,line, line_num, @1.first_column + 1, "int, string, value, real, name");
+	} 
 ;
 
 code_df:
@@ -232,24 +250,34 @@ type:
 
 block:
     statement { 
+        // //////std::cerr << "block\n";
+        $$ = new block();
         $$->statement_seq_->statements_->push_back($1); 
     }
-	| LCB opt_dfdecls statement_seq RCB opt_behavior {
-         $$ = new block($2, $3, $5); 
+	| LCB opt_dfdecls statement_seq RCB opt_behavior { 
+        // ////std::cerr << "block1\n";
+        $$ = new block($2, $3, $5); 
     }
 	;
 
 opt_dfdecls:
-	dfdecls { $$->dfdecls_ = $1; }
-	| { $$->dfdecls_ = nullptr; }
+	dfdecls { 
+        //std::cerr << "df_decls" << std::endl;
+        $$ = new opt_dfdecls($1); 
+    }
+
+	| { $$ = new opt_dfdecls(nullptr); }
 	;
 
 dfdecls:
-	KW_DF name_seq SCOLON { $$->name_seq_ = $2; }
+	KW_DF name_seq SCOLON { $$ = new dfdecls($2); }
 	;
 
 name_seq:
-	NAME { $$->names_->push_back($1); }
+	NAME { 
+        $$ = new name_seq();
+        $$->names_->push_back($1); 
+    }
 	| name_seq COMMA NAME {
         $$->names_->insert($$->names_->end(), $1->names_->begin(), $1->names_->end()); 
         $$->names_->push_back($3);
@@ -257,12 +285,22 @@ name_seq:
 	;
 
 statement_seq:
-	statement  { $$->statements_->push_back($1); }
+	statement  { 
+        // //std::cerr << "statement_seq\n";
+        $$ = new statement_seq();
+        $$->statements_->push_back($1); 
+    }
 	| statement_seq statement {
         $$->statements_->insert($$->statements_->end(), $1->statements_->begin(), $1->statements_->end()); 
         $$->statements_->push_back($2);
+        // //std::cerr << "statement_seq statement\n";
     }
-	;
+
+    |
+    dfdecls error SCOLON {
+	    reporter.report(ERROR_LEVEL::ERROR, line, line_num, @1.first_column + 1, "stament. <Invalid usage. Try: df x, y;>");
+    } 
+    ;
 
 
 control_pragma:
@@ -286,7 +324,10 @@ control_pragma:
     }
 	    
 statement:
-    cf_statement { $$ = $1; }
+    cf_statement { 
+        $$ = $1;
+        // ////std::cerr << "statement\n" ;
+    }
     | let_statement { $$ = $1; }
     | for_statement { $$ = $1; }
     | while_statement { $$ = $1; }
@@ -295,21 +336,29 @@ statement:
 
 cf_statement: opt_label code_id opt_exprs opt_setdf_rules opt_rules opt_behavior SCOLON {
         $$ = new cf_statement($1, $2, $3, $4, $5, $6);
+        // ////std::cerr << "cf_statement\n"; 
     }
 	;
 
 opt_behavior:
 	AT LCB behv_pragmas_seq RCB {
-        $$->seq_ = $3;
+        $$ = new opt_behavior($3);
+        // ////std::cerr << "opt_behavior\n";
     }
-	| { $$ = nullptr; }
+	| { $$ = new opt_behavior(); }
 	;
 
 behv_pragmas_seq:
-	behv_pragma { $$->behv_pragma_->push_back($1); }
+	behv_pragma { 
+        $$ = new behv_pragmas_seq();
+        $$->behv_pragma_->push_back($1); 
+        ////std::cerr << "behv_pragma\n" ;
+    }
 	| behv_pragmas_seq behv_pragma {
+        $$ = new behv_pragmas_seq();
         $$->behv_pragma_->insert($$->behv_pragma_->end(), $1->behv_pragma_->begin(), $1->behv_pragma_->end()); 
         $$->behv_pragma_->push_back($2);
+	    ////std::cerr << "behv_pragmas_seq behv_pragma\n"; 
     }
 	;
 
@@ -336,7 +385,10 @@ behv_pragma:
 	;
 
 id_seq:
-	id { $$->seq_->push_back($1); }
+	id { 
+        $$ = new id_seq();
+        $$->seq_->push_back($1); 
+    }
 	| id_seq COMMA id {
         $$->seq_->insert($$->seq_->end(), $1->seq_->begin(), $1->seq_->end()); 
         $$->seq_->push_back($3);
@@ -362,7 +414,10 @@ if_statement: KW_IF expr block %prec IFX {
 	;
 
 assign_seq:
-	assign { $$->assign_seq_->push_back($1); }
+	assign { 
+        $$ = new assign_seq();
+        $$->assign_seq_->push_back($1);
+    }
 	| assign_seq COMMA assign  {
         $$->assign_seq_->insert($$->assign_seq_->end(), $1->assign_seq_->begin(), $1->assign_seq_->end()); 
         $$->assign_seq_->push_back($3);
@@ -375,8 +430,10 @@ assign:
 
 opt_label:
 	KW_CF id COLON { $$ = new opt_label($2); }
-	|   {
-        $$->id_ = nullptr;
+	|   
+    {
+        ////std::cerr << "opt label is nullptr" << std::endl;
+        $$ = new opt_label(nullptr);
 	}
 	;
 
@@ -388,36 +445,51 @@ id:
 	;
 
 opt_exprs:
-	LB exprs_seq RB { $$ = new opt_exprs($2); }
-	| LB RB { $$->exprs_seq_ = nullptr; }
+	LB exprs_seq RB { 
+        ////std::cerr << "opt_exprs" << std::endl;
+        $$ = new opt_exprs($2); 
+    }
+	| LB RB { 
+        ////std::cerr << "exprs_seq is nullptr" << std::endl;
+        $$ = new opt_exprs(nullptr); 
+        }
 	;
 
 exprs_seq:
-	expr { $$->expr_->push_back($1); }
+	expr { 
+        $$ = new exprs_seq();
+        $$->expr_->push_back($1); 
+    }
 	| exprs_seq COMMA expr {
+        ////std::cerr << "expr seq" << std::endl;
         $$->expr_->insert($$->expr_->end(), $1->expr_->begin(), $1->expr_->end()); 
         $$->expr_->push_back($3);
     }
 	;
 
 opt_setdf_rules:
-	RARR opt_exprs { $$ = new opt_setdf_rules($2); }
+	RARR opt_exprs { 
+        $$ = new opt_setdf_rules($2); 
+        ////std::cerr << "opt_setdf_rules" << std::endl;
+        }
+    | {
+        $$ = new opt_setdf_rules(nullptr); 
+    }
+
 	;
 
 opt_rules:
     ARROW opt_exprs { $$ = new opt_rules($2); }
     | {
-        $$ = nullptr;
+        $$ = new opt_rules(nullptr);
     }
     ;
 
 code_id:
 	NAME {  
-        printf("$1 = %p\n", $1);
         $$ = $1;
-
-            // std::cerr << *($1) << std::endl;
-     }
+        ////std::cerr << "code id : " << *($1->value_) << std::endl;
+    }
 	;
 
 expr:
@@ -448,12 +520,15 @@ expr:
 opt_params:
 	LB params_seq RB { $$ = new opt_params($2); }
 	| LB RB { $$ = new opt_params(nullptr); 
-                std::cerr << "opt params\n";
+                ////std::cerr << "opt params\n";
             }
 	;
 
 params_seq:
-	param  { $$->params_->push_back($1); }
+	param  { 
+        $$ = new param_seq();
+        $$->params_->push_back($1); 
+    }
 	| params_seq COMMA param {
         $$->params_->insert($$->params_->end(), $1->params_->begin(), $1->params_->end()); 
         $$->params_->push_back($3);

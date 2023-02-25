@@ -1,0 +1,6 @@
+grammar.tab.hpp
+grammar.tab.cpp
+*.fa
+lex.yy.c
+a.out
+
