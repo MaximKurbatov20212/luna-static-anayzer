@@ -10,5 +10,5 @@ analyzer: grammar.tab.cpp lex.yy.c main.cpp
 	g++ -std=c++11 lex.yy.c grammar.tab.cpp main.cpp ast_analyzer.cpp -o a.out
 
 clean: 
-	rm grammar.tab.cpp lex.yy.c ast_analyzer.cpp 
+	rm grammar.tab.cpp  grammar.tab.hpp lex.yy.c  
 
