@@ -20,13 +20,13 @@ int main() {
     yyparse();
 
     if (reporter.has_errors()) {
-        delete ast;
+        // delete ast;
         return EXIT_ERROR;
     }
 
     std::cerr << "analyze\n";
     ast_analyzer.analyze(ast);
 
-    delete ast;
+    // delete ast;
     return EXIT_SUCCESS;
 }

@@ -7,10 +7,15 @@
 
 class virtual_token {
 public:
-    unsigned int line;
-    unsigned int pos;
-    
-    virtual void to_string() {}
+    unsigned int line_;
+    unsigned int pos_;
+
+    void set_position(uint line, uint pos) {
+        pos_ = pos;
+        line_ = line;
+    }
+
+    virtual void to_string() const {}
     virtual ~virtual_token(){}
 };
 
@@ -23,6 +28,11 @@ class luna_string : public expr {
 
         luna_string() : value_(new std::string()) {}
 
+        ~luna_string() {
+            std::cerr << "luna string dtor: " << *value_ << std::endl;
+            delete value_;
+            std::cerr << "after luna string dtor: " << std::endl;
+        }
 };
     
 class id : public virtual_token {};
@@ -31,13 +41,14 @@ class param : public virtual_token {
     public:    
         luna_string *type_;
         luna_string* name_;
-        param(luna_string* type, luna_string* name, uint line, uint pos) : type_(type), name_(name) {}
+        param(luna_string* type, luna_string* name) : type_(type), name_(name) {}
 };
 
 class param_seq : public virtual_token {
     public:    
         std::vector<param *>* params_;
-        param_seq(std::vector<param *>* params) : params_(params) {}
+        param_seq(std::vector<param *>* params, uint pos = 0) : params_(params) {}
+
         param_seq() : params_(new std::vector<param *>()) {}
 };
 
@@ -148,8 +159,9 @@ class code_df_param : public virtual_token {
         code_df_param(luna_string* type, luna_string* df) : type_(type), code_df_(df) {}
 
         ~code_df_param() {
-            std::cerr << "code param dtor\n";
+            std::cerr << "code param dtor: type_\n";
             delete type_;
+            std::cerr << "code param dtor: code_df\n";
             delete code_df_;
         }
 };

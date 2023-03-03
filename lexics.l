@@ -16,7 +16,13 @@ extern bool has_errors;
 using namespace std;
 extern error_reporter reporter;
 
+extern int cur_position_in_line;
+extern int line_num;
+
 #define SAVE_TOKEN yylval.string_ = new luna_string(new std::string(yytext))
+
+#define YY_USER_ACTION yylloc.first_line = line_num; \
+	yylloc.first_column = cur_position_in_line;
 
 %}
 
@@ -127,6 +133,7 @@ void next_line() {
 	}
 	line = "";
 	line_num++;
+	cur_position_in_line = 1;
 }
 
 void next_token(const std::string &s) {

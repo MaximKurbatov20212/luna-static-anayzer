@@ -202,6 +202,7 @@ sub_def:
 
     | KW_CPP NAME KW_BLOCK LB error RB {
         reporter.report(ERROR_LEVEL::ERROR, 
+            "Unexpected token",
             line,
             @5.first_line,
             @5.first_column,
@@ -211,6 +212,7 @@ sub_def:
 
     | KW_IMPORT code_id LB opt_ext_params RB error SCOLON {
         reporter.report(ERROR_LEVEL::ERROR, 
+            "Unexpected token",
             line,
             @6.first_line,
             @6.first_column,
@@ -220,6 +222,7 @@ sub_def:
 
     | KW_IMPORT code_id LB opt_ext_params error SCOLON {
         reporter.report(ERROR_LEVEL::ERROR, 
+            "Unexpected token",
             line,
             @5.first_line,
             @5.first_column,
@@ -229,6 +232,7 @@ sub_def:
 
     | KW_IMPORT code_id error SCOLON {
         reporter.report(ERROR_LEVEL::ERROR, 
+            "Unexpected token",
             line,
             @3.first_line,
             @3.first_column,
@@ -259,6 +263,7 @@ code_df_param:
     }
     | error SCOLON {
 	    reporter.report(ERROR_LEVEL::ERROR,
+            "Unexpected token",
             line, 
             line_num,
             @1.first_column + 1,
@@ -296,7 +301,8 @@ opt_dfdecls:
         $$ = new opt_dfdecls($1); 
     }
 
-	| { $$ = new opt_dfdecls(nullptr); }
+	| { $$ = new opt_dfdecls(nullptr);
+     }
 	;
 
 dfdecls:
@@ -330,6 +336,7 @@ statement_seq:
 
     | dfdecls SCOLON {
 	    reporter.report(ERROR_LEVEL::ERROR,
+            "Unexpected token",
             line,
             line_num,
             @1.first_column,
@@ -339,6 +346,7 @@ statement_seq:
 
     | error SCOLON {
 	    reporter.report(ERROR_LEVEL::ERROR,
+            "Unexpected token",
             line,
             line_num,
             @1.first_column,
@@ -528,7 +536,8 @@ opt_rules:
 code_id:
 	NAME {  
         $$ = $1;
-        ////std::cerr << "code id : " << *($1->value_) << std::endl;
+        $$->set_position(@1.first_line, @1.first_column);
+        std::cerr << "code id : " << *($$->value_) << " "  << $$->line_ << ":" << $$->pos_ << std::endl;
     }
 	;
 
@@ -566,6 +575,8 @@ opt_params:
 
 params_seq:
 	param  { 
+        $1->set_position(@1.first_line, @1.first_column);
+        std::cerr << $1->line_ << ":" << $1->pos_;
         $$ = new param_seq();
         $$->params_->push_back($1); 
     }
@@ -576,7 +587,7 @@ params_seq:
 	;
 
 param:
-	type NAME {$$ = new param($1, $2); }
+	type NAME { $$ = new param($1, $2); }
 	;
 
 where_type: KW_RUSH { $$ = $1; }

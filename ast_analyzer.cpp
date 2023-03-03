@@ -4,8 +4,10 @@
 #include <assert.h>
 
 extern error_reporter reporter;
+extern std::string line;
 
-bool ast_analyzer::have_such_code_id(std::map<std::string, std::string>& map, import* import) {
+bool ast_analyzer::have_such_code_id(std::map<std::string, std::string>& map,
+                                    import* import) {
     if (import == nullptr) return false;
 
     if (map.find(*(import->luna_code_id_->value_)) != map.end()) {
@@ -27,10 +29,8 @@ bool ast_analyzer::analyze_shadow_import(program* program) {
 
     std::vector<sub_def *> sub_defs = *(program->sub_defs);
 
-    std::cerr << "before\n";
     auto it = sub_defs.begin();
     auto end = sub_defs.end();
-    std::cerr << "after\n";
 
     while (it != end) {
         import* import_decl = dynamic_cast<import *> (*it); 
@@ -41,16 +41,20 @@ bool ast_analyzer::analyze_shadow_import(program* program) {
         }
 
         if (have_such_code_id(map, import_decl)) {
+
             reporter.report(ERROR_LEVEL::WARNING,
-                "",
-                1,
-                1, 
-                "Shadowing"
+                "such codeid aleady define",
+                "import c_init1(int, name) as init;",
+                import_decl->luna_code_id_->line_,
+                import_decl->luna_code_id_->pos_
             );
         }
 
         else {
-            map.insert(std::pair<std::string, std::string>(*(import_decl->luna_code_id_->value_), *(import_decl->cxx_code_id_->value_)));
+            map.insert(std::pair<std::string, std::string>(
+                *(import_decl->luna_code_id_->value_),   
+                 *(import_decl->cxx_code_id_->value_))
+            );
         }
 
         it++;

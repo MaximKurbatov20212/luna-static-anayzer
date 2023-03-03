@@ -14,18 +14,20 @@ class error_reporter {
 public:
 
     void report(ERROR_LEVEL level,
-        const std::string& msg,
+        const std::string& error_msg,
+        const std::string& error_line,
         unsigned int line,
         unsigned int pos,
-        const std::string& expectation)
+        const std::string& expectation = "")
     {
         if (errors_number < LIMIT_ERRORS) {
             std::string lvl = level == ERROR ? "Error" : "Warning";
+            fprintf(stderr, "%s. Line %d-%d: %s\n\t%s\n", lvl.c_str(), line, pos, error_msg.c_str(), error_line.c_str());
+            fprintf(stderr, "\t%s^---- here\n", repeat_spaces(pos).c_str());
 
-            fprintf(stderr, "%s. Line %d-%d:\n\t%s\n", lvl.c_str(), line, pos, msg.c_str());
-            // TODO: pos - 1 ???
-            fprintf(stderr, "\t%s^---- here\n", repeat_spaces(pos - 1).c_str());
-            fprintf(stderr, "Expected: %s\n\n",  expectation.c_str());
+            if (expectation != "") {
+                fprintf(stderr, "Expected: %s\n\n",  expectation.c_str());
+            }
         }
 
         if (level == ERROR) {
