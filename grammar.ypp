@@ -266,7 +266,7 @@ code_df_param:
             "Unexpected token",
             line, 
             line_num,
-            @1.first_column + 1,
+            @1.first_column,
             "int, string, value, real, name"
         );
 	} 
