@@ -154,32 +154,25 @@ all:
 	program { 
         ast = $1;
     }
-    |
-    {
-        ////std::cerr << "whitespace\n";
-    }
+    | {}
 
 // TODO: use std::move
 program:    
     sub_def {
         $$ = new program();
         $$->sub_defs->push_back($1);
-        // //std::cerr << "program\n";
     }
 	
     | program sub_def { 
         $$ = new program();
         $$->sub_defs->insert($$->sub_defs->end(), $1->sub_defs->begin(), $1->sub_defs->end()); 
         $$->sub_defs->push_back($2);
-        ////std::cerr << "program sub_def\n";
     };
 
 sub_def:
-    
     // sub main() {}
 	KW_SUB control_pragma code_id opt_params block {
         $$ = new luna_sub_def($2, $3, $4, $5);
-        ////std::cerr <<  "luna_sub_def\n";
     }
 
     // C++ sub codeid opt_params __block (int)
@@ -189,25 +182,60 @@ sub_def:
 
     // import init(params) as init;
 	| KW_IMPORT code_id LB opt_ext_params RB KW_AS code_id SCOLON {
-        ////std::cerr << "import\n";
-        $$ = new import_def($2, $4, $7);
+        $$ = new import($2, $4, $7, std::string(""));
     }
 
     // import init(params) as init : CUDA;
     | KW_IMPORT code_id LB opt_ext_params RB KW_AS code_id COLON KW_CUDA SCOLON {
-        $$ = new import_def_cuda($2, $4, $7);
+        $$ = new import($2, $4, $7, std::string("cuda"));
     }
     
     // import init(params) as init : CUDA , NOCPU;
-    | KW_IMPORT code_id LB opt_ext_params RB KW_AS code_id COLON KW_CUDA COMMA KW_NOCPU  SCOLON {
-        $$ = new import_def_cuda_nocpu($2, $4, $7);
+    | KW_IMPORT code_id LB opt_ext_params RB KW_AS code_id COLON KW_CUDA COMMA KW_NOCPU SCOLON {
+        $$ = new import($2, $4, $7, std::string("cuda nocpu"));
     }
 
-    // C++ name __block (int)
+    // C++ main __block (int)
 	| KW_CPP NAME KW_BLOCK LB INT RB {
         $$ = new cxx_block_def($2);
     }
-	;
+
+    | KW_CPP NAME KW_BLOCK LB error RB {
+        reporter.report(ERROR_LEVEL::ERROR, 
+            line,
+            @5.first_line,
+            @5.first_column,
+            "int"
+        );
+    }
+
+    | KW_IMPORT code_id LB opt_ext_params RB error SCOLON {
+        reporter.report(ERROR_LEVEL::ERROR, 
+            line,
+            @6.first_line,
+            @6.first_column,
+            "keyword as"
+        );
+    }
+
+    | KW_IMPORT code_id LB opt_ext_params error SCOLON {
+        reporter.report(ERROR_LEVEL::ERROR, 
+            line,
+            @5.first_line,
+            @5.first_column,
+            ")"
+        );
+    }
+
+    | KW_IMPORT code_id error SCOLON {
+        reporter.report(ERROR_LEVEL::ERROR, 
+            line,
+            @3.first_line,
+            @3.first_column,
+            "("
+        );
+    }
+;
 
 opt_ext_params:
     ext_params_seq { $$ = new opt_ext_params($1); }
@@ -223,14 +251,19 @@ ext_params_seq:
         $$->params_->insert($$->params_->end(), $1->params_->begin(), $1->params_->end()); 
         $$->params_->push_back($3);
     }
-	;
+	; 
 
 code_df_param:
     type code_df {
         $$ = new code_df_param($1, $2);
     }
     | error SCOLON {
-	    reporter.report(ERROR_LEVEL::ERROR,line, line_num, @1.first_column + 1, "int, string, value, real, name");
+	    reporter.report(ERROR_LEVEL::ERROR,
+            line, 
+            line_num,
+            @1.first_column + 1,
+            "int, string, value, real, name"
+        );
 	} 
 ;
 
@@ -250,19 +283,16 @@ type:
 
 block:
     statement { 
-        // //////std::cerr << "block\n";
         $$ = new block();
         $$->statement_seq_->statements_->push_back($1); 
     }
 	| LCB opt_dfdecls statement_seq RCB opt_behavior { 
-        // ////std::cerr << "block1\n";
         $$ = new block($2, $3, $5); 
     }
 	;
 
 opt_dfdecls:
 	dfdecls { 
-        //std::cerr << "df_decls" << std::endl;
         $$ = new opt_dfdecls($1); 
     }
 
@@ -286,22 +316,36 @@ name_seq:
 
 statement_seq:
 	statement  { 
-        // //std::cerr << "statement_seq\n";
+        // std::cerr << "statement\n";
         $$ = new statement_seq();
         $$->statements_->push_back($1); 
     }
+
 	| statement_seq statement {
-        $$->statements_->insert($$->statements_->end(), $1->statements_->begin(), $1->statements_->end()); 
-        $$->statements_->push_back($2);
-        // //std::cerr << "statement_seq statement\n";
+        if ($1 != nullptr) {
+            $$->statements_->insert($$->statements_->end(), $1->statements_->begin(), $1->statements_->end()); 
+            $$->statements_->push_back($2);
+        }
     }
 
-    |
-    dfdecls error SCOLON {
-	    reporter.report(ERROR_LEVEL::ERROR, line, line_num, @1.first_column + 1, "stament. <Invalid usage. Try: df x, y;>");
+    | dfdecls SCOLON {
+	    reporter.report(ERROR_LEVEL::ERROR,
+            line,
+            line_num,
+            @1.first_column,
+            "cf, if, let, for, while. Usage: df x, y;");
+        $$ = nullptr;
+    }
+
+    | error SCOLON {
+	    reporter.report(ERROR_LEVEL::ERROR,
+            line,
+            line_num,
+            @1.first_column,
+            "cf, if, let, for, while.");
+        $$ = nullptr;
     } 
     ;
-
 
 control_pragma:
     LARR where_type COMMA expr RARR {
@@ -325,8 +369,8 @@ control_pragma:
 	    
 statement:
     cf_statement { 
+        // std::cerr << "cf statement\n" ;
         $$ = $1;
-        // ////std::cerr << "statement\n" ;
     }
     | let_statement { $$ = $1; }
     | for_statement { $$ = $1; }
@@ -336,14 +380,13 @@ statement:
 
 cf_statement: opt_label code_id opt_exprs opt_setdf_rules opt_rules opt_behavior SCOLON {
         $$ = new cf_statement($1, $2, $3, $4, $5, $6);
-        // ////std::cerr << "cf_statement\n"; 
+        // std::cerr << "cf statement success: " << *($2->value_) << std::endl ;
     }
 	;
 
 opt_behavior:
 	AT LCB behv_pragmas_seq RCB {
         $$ = new opt_behavior($3);
-        // ////std::cerr << "opt_behavior\n";
     }
 	| { $$ = new opt_behavior(); }
 	;
@@ -352,13 +395,11 @@ behv_pragmas_seq:
 	behv_pragma { 
         $$ = new behv_pragmas_seq();
         $$->behv_pragma_->push_back($1); 
-        ////std::cerr << "behv_pragma\n" ;
     }
 	| behv_pragmas_seq behv_pragma {
         $$ = new behv_pragmas_seq();
         $$->behv_pragma_->insert($$->behv_pragma_->end(), $1->behv_pragma_->begin(), $1->behv_pragma_->end()); 
         $$->behv_pragma_->push_back($2);
-	    ////std::cerr << "behv_pragmas_seq behv_pragma\n"; 
     }
 	;
 
@@ -461,7 +502,7 @@ exprs_seq:
         $$->expr_->push_back($1); 
     }
 	| exprs_seq COMMA expr {
-        ////std::cerr << "expr seq" << std::endl;
+        // std::cerr << "expr seq" << std::endl;
         $$->expr_->insert($$->expr_->end(), $1->expr_->begin(), $1->expr_->end()); 
         $$->expr_->push_back($3);
     }
@@ -470,12 +511,11 @@ exprs_seq:
 opt_setdf_rules:
 	RARR opt_exprs { 
         $$ = new opt_setdf_rules($2); 
-        ////std::cerr << "opt_setdf_rules" << std::endl;
+        // std::cerr << "opt_setdf_rules" << std::endl;
         }
     | {
         $$ = new opt_setdf_rules(nullptr); 
     }
-
 	;
 
 opt_rules:

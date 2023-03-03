@@ -4,6 +4,7 @@
 #include <cstring>
 #include <iostream>
 
+
 enum ERROR_LEVEL {
    ERROR,
    WARNING
@@ -11,12 +12,12 @@ enum ERROR_LEVEL {
 
 class error_reporter {
 public:
-    void report(
-        ERROR_LEVEL level,
+
+    void report(ERROR_LEVEL level,
         const std::string& msg,
-            unsigned int line,
-            unsigned int pos,
-            const std::string& expectation)
+        unsigned int line,
+        unsigned int pos,
+        const std::string& expectation)
     {
         if (errors_number < LIMIT_ERRORS) {
             std::string lvl = level == ERROR ? "Error" : "Warning";
@@ -26,11 +27,18 @@ public:
             fprintf(stderr, "\t%s^---- here\n", repeat_spaces(pos - 1).c_str());
             fprintf(stderr, "Expected: %s\n\n",  expectation.c_str());
         }
-        errors_number++;
+
+        if (level == ERROR) {
+            errors_number++;
+        }
+    }
+
+    bool has_errors() const {
+        return errors_number != 0;
     }
 
 private:
-    int errors_number;
+    unsigned int errors_number = 0;
     const int LIMIT_ERRORS = 1000;
 
     std::string repeat_spaces(const int num) {

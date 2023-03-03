@@ -1,6 +1,7 @@
 %{
 #include "ast.hpp"
 #include "grammar.tab.hpp"
+#include "error_reporter.hpp"
 
 #include <string>
 #include <cstring>
@@ -11,8 +12,9 @@ extern "C" int yywrap() { return 1; }
 void next_line();
 std::string yystring();
 void next_token(const std::string&);
-
+extern bool has_errors;
 using namespace std;
+extern error_reporter reporter;
 
 #define SAVE_TOKEN yylval.string_ = new luna_string(new std::string(yytext))
 
@@ -110,7 +112,7 @@ NOCPU { next_token(yystring()); return KW_NOCPU;}
 
 [ \t]+ { next_token(yystring()); }
 
-. { yyerror((string("invalid symbol: ") + yystring()).c_str()); }
+. { std::cerr << ((string("invalid symbol: ") + yystring()).c_str()) << std::endl; }
 
 %%
 
@@ -141,5 +143,14 @@ std::string yystring() {
 }
 
 void yyerror(const char* msg) {
-	printf("%s\n", msg);
+	// if (has_errors) return;
+
+	// reporter.report(ERROR_LEVEL::ERROR, 
+    //         line,
+	// 		line_num,
+	// 		cur_position_in_line,
+	// 		"Sorry, we can't find out type of this problem.\n\t  Report this example: https://vk.com/morning__coffee"
+    //     );
+
+	// has_errors = true;
 }
