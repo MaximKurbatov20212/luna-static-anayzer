@@ -26,20 +26,26 @@ int main(int argc, char** argv) {
         return EXIT_ERROR;
     }
 
-    ast_analyzer analyzer = ast_analyzer(ast, yyin);
 
     std::cerr << "parse\n";
 
     yyparse();
 
-    if (reporter.has_errors()) {
-        // delete ast;
-        return EXIT_ERROR;
-    }
+    // if (reporter.has_errors()) {
+    //     // delete ast;
+    //     return EXIT_ERROR;
+    // }
+
+    // std::cerr << ast->to_string() << std::endl;
+
+    // ast_analyzer analyzer = ast_analyzer(ast, yyin);
 
     std::cerr << "analyze\n";
-    analyzer.analyze();
+    // analyzer.analyze();
 
-    // delete ast;
+    std::cout << sizeof(program) << std::endl;
+    std::cout << sizeof(import) << std::endl;
+    delete ast;
+    fclose(yyin);
     return EXIT_SUCCESS;
 }

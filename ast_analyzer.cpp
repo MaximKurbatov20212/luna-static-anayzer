@@ -19,7 +19,8 @@ bool ast_analyzer::have_such_code_id(std::map<std::string, std::string>& map,
 
 bool ast_analyzer::analyze() {
     bool has_errors = analyze_shadow_import();
-    has_errors = analyze_df_double_declaration();
+    // has_errors = analyze_df_double_declaration();
+    return has_errors;
 }
 
 bool ast_analyzer::analyze_df_double_declaration() {
@@ -39,8 +40,9 @@ bool ast_analyzer::analyze_df_double_declaration() {
 
         std::vector<luna_string *>* dfs = luna_def->block_->opt_dfdecls_->dfdecls_->name_seq_->names_;
 
-        while ()
+        // while ()
     }
+    return true;
 }
 
 bool ast_analyzer::analyze_shadow_import() {

@@ -164,9 +164,7 @@ program:
     }
 	
     | program sub_def { 
-        $$ = new program();
-        $$->sub_defs->insert($$->sub_defs->end(), $1->sub_defs->begin(), $1->sub_defs->end()); 
-        $$->sub_defs->push_back($2);
+        $1->sub_defs->push_back($2);
     };
 
 sub_def:
@@ -252,14 +250,18 @@ ext_params_seq:
         $$->params_->push_back($1);
     }
 	| ext_params_seq COMMA code_df_param {
-        $$->params_->insert($$->params_->end(), $1->params_->begin(), $1->params_->end()); 
-        $$->params_->push_back($3);
+        $1->params_->push_back($3);
     }
 	; 
 
 code_df_param:
     type code_df {
         $$ = new code_df_param($1, $2);
+        std::cerr << "code df param\n";
+        std::cerr << $1 << " : " << *($1->value_)<< std::endl;
+        if ($2) {
+            std::cerr << $2 << " : " << *($2->value_) <<std::endl;
+        }
     }
     | error SCOLON {
 	    reporter.report(ERROR_LEVEL::ERROR,
@@ -278,7 +280,8 @@ code_df:
 	;
 
 type:
-	KW_INT { $$ = $1; }
+	KW_INT { $$ = $1;}
+
 	| KW_REAL { $$ = $1; } 
 	| KW_STRING  { $$ = $1; } 
 	| KW_NAME { $$ = $1; } 
@@ -315,33 +318,20 @@ name_seq:
         $$->names_->push_back($1); 
     }
 	| name_seq COMMA NAME {
-        $$->names_->insert($$->names_->end(), $1->names_->begin(), $1->names_->end()); 
-        $$->names_->push_back($3);
+        $1->names_->push_back($3);
     }
 	;
 
 statement_seq:
 	statement  { 
-        // std::cerr << "statement\n";
         $$ = new statement_seq();
         $$->statements_->push_back($1); 
     }
 
 	| statement_seq statement {
         if ($1 != nullptr) {
-            $$->statements_->insert($$->statements_->end(), $1->statements_->begin(), $1->statements_->end()); 
-            $$->statements_->push_back($2);
+            $1->statements_->push_back($2);
         }
-    }
-
-    | dfdecls SCOLON {
-	    reporter.report(ERROR_LEVEL::ERROR,
-            "Unexpected token",
-            line,
-            line_num,
-            @1.first_column,
-            "cf, if, let, for, while. Usage: df x, y;");
-        $$ = nullptr;
     }
 
     | error SCOLON {
@@ -352,7 +342,7 @@ statement_seq:
             @1.first_column,
             "cf, if, let, for, while.");
         $$ = nullptr;
-    } 
+    }
     ;
 
 control_pragma:
@@ -371,15 +361,13 @@ control_pragma:
     | LARR where_type RARR{
         $$ = new control_pragma($2, nullptr);
     }
-    | {
+    | 
+    {
         $$ = nullptr;
     }
 	    
 statement:
-    cf_statement { 
-        // std::cerr << "cf statement\n" ;
-        $$ = $1;
-    }
+    cf_statement { $$ = $1;}
     | let_statement { $$ = $1; }
     | for_statement { $$ = $1; }
     | while_statement { $$ = $1; }
@@ -405,9 +393,7 @@ behv_pragmas_seq:
         $$->behv_pragma_->push_back($1); 
     }
 	| behv_pragmas_seq behv_pragma {
-        $$ = new behv_pragmas_seq();
-        $$->behv_pragma_->insert($$->behv_pragma_->end(), $1->behv_pragma_->begin(), $1->behv_pragma_->end()); 
-        $$->behv_pragma_->push_back($2);
+        $1->behv_pragma_->push_back($2);
     }
 	;
 
@@ -439,8 +425,7 @@ id_seq:
         $$->seq_->push_back($1); 
     }
 	| id_seq COMMA id {
-        $$->seq_->insert($$->seq_->end(), $1->seq_->begin(), $1->seq_->end()); 
-        $$->seq_->push_back($3);
+        $1->seq_->push_back($3);
     }
 
 let_statement: KW_LET assign_seq block {
@@ -468,8 +453,7 @@ assign_seq:
         $$->assign_seq_->push_back($1);
     }
 	| assign_seq COMMA assign  {
-        $$->assign_seq_->insert($$->assign_seq_->end(), $1->assign_seq_->begin(), $1->assign_seq_->end()); 
-        $$->assign_seq_->push_back($3);
+        $1->assign_seq_->push_back($3);
     }
 	;
 
@@ -510,9 +494,7 @@ exprs_seq:
         $$->expr_->push_back($1); 
     }
 	| exprs_seq COMMA expr {
-        // std::cerr << "expr seq" << std::endl;
-        $$->expr_->insert($$->expr_->end(), $1->expr_->begin(), $1->expr_->end()); 
-        $$->expr_->push_back($3);
+        $1->expr_->push_back($3);
     }
 	;
 
@@ -534,10 +516,12 @@ opt_rules:
     ;
 
 code_id:
-	NAME {  
+	NAME { 
         $$ = $1;
         $$->set_position(@1.first_line, @1.first_column);
-        std::cerr << "code id : " << *($$->value_) << " "  << $$->line_ << ":" << $$->pos_ << std::endl;
+
+        std::cerr << "code id\n";
+        std::cerr << $1 << " : " << *($1->value_) <<  std::endl;
     }
 	;
 
@@ -568,21 +552,17 @@ expr:
 
 opt_params:
 	LB params_seq RB { $$ = new opt_params($2); }
-	| LB RB { $$ = new opt_params(nullptr); 
-                ////std::cerr << "opt params\n";
-            }
+	| LB RB { $$ = new opt_params(nullptr); }
 	;
 
 params_seq:
 	param  { 
         $1->set_position(@1.first_line, @1.first_column);
-        std::cerr << $1->line_ << ":" << $1->pos_;
         $$ = new param_seq();
         $$->params_->push_back($1); 
     }
 	| params_seq COMMA param {
-        $$->params_->insert($$->params_->end(), $1->params_->begin(), $1->params_->end()); 
-        $$->params_->push_back($3);
+        $1->params_->push_back($3);
     }
 	;
 

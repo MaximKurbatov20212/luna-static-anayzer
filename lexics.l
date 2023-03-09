@@ -19,7 +19,8 @@ extern error_reporter reporter;
 extern int cur_position_in_line;
 extern int line_num;
 
-#define SAVE_TOKEN yylval.string_ = new luna_string(new std::string(yytext))
+#define SAVE_TOKEN yylval.string_ = new luna_string(new std::string(yytext)); \
+				std::cerr << "new token: " << *(yylval.string_->value_) << std::endl
 
 #define YY_USER_ACTION yylloc.first_line = line_num; \
 	yylloc.first_column = cur_position_in_line;
@@ -38,12 +39,12 @@ else { next_token(yystring()); return KW_ELSE; }
 let { next_token(yystring()); return KW_LET; }
 in { next_token(yystring()); return KW_IN; }
 out { next_token(yystring()); return KW_OUT; }
-SIZE { next_token(yystring()); return KW_SIZE; }
+SIZE {next_token(yystring()); return KW_SIZE; }
 sub { next_token(yystring()); return KW_SUB; }
 while { next_token(yystring()); return KW_WHILE; }
-int { next_token(yystring()); return KW_INT; }
-real { next_token(yystring()); return KW_REAL; }
-string { next_token(yystring()); return KW_STRING; }
+int { SAVE_TOKEN; next_token(yystring()); return KW_INT; }
+real { SAVE_TOKEN; next_token(yystring()); return KW_REAL; }
+string { SAVE_TOKEN; next_token(yystring()); return KW_STRING; }
 name { next_token(yystring()); return KW_NAME; }
 value { next_token(yystring()); return KW_VALUE; }
 rush { next_token(yystring()); return KW_RUSH; }
@@ -53,50 +54,52 @@ unrolling { next_token(yystring()); return KW_UNROLLING; }
 CUDA { next_token(yystring()); return KW_CUDA;}
 NOCPU { next_token(yystring()); return KW_NOCPU;}
 
-"$" { next_token(yystring()); return BUCK; }
-"&" { next_token(yystring()); return AMP; }
-"=" { next_token(yystring()); return EQ; }
-"<" { next_token(yystring()); return LT; }
-">" { next_token(yystring()); return GT; }
-";" { next_token(yystring()); return SCOLON; }
-":" { next_token(yystring()); return COLON;}
-"?" { next_token(yystring()); return QMARK;}
-"," { next_token(yystring()); return COMMA; }
-"." { next_token(yystring()); return DOT; }
-".." { next_token(yystring()); return DIAP; }
-"{" { next_token(yystring()); return LCB; }
-"}" { next_token(yystring()); return RCB; }
-"(" { next_token(yystring()); return LB; }
-")" { next_token(yystring()); return RB; }
-"[" { next_token(yystring()); return LSB; }
-"]" { next_token(yystring()); return RSB; }
-"+" { next_token(yystring()); return PLUS; }
-"-" { next_token(yystring()); return MINUS; }
-"*" { next_token(yystring()); return MUL; }
-"/" { next_token(yystring()); return DIV; }
-"%" { next_token(yystring()); return MOD; }
-"#" { next_token(yystring()); return SHARP; }
-"@" { next_token(yystring()); return AT; }
-"==" { next_token(yystring()); return DBLEQ; }
-"<=" { next_token(yystring()); return LEQ; }
-"=>" { next_token(yystring()); return EQG; }
-">=" { next_token(yystring()); return GEQ; }
-"!=" { next_token(yystring()); return NEQ; }
-"&&" { next_token(yystring()); return DBLAMP; }
-"||" { next_token(yystring()); return DBLPIPE; }
-"-->" { next_token(yystring()); return ARROW; }
-"<--" { next_token(yystring()); return LARROW; }
-"<<" { next_token(yystring()); return LARR; }
-">>" { next_token(yystring()); return RARR; }
-"C++" { next_token(yystring()); return KW_CPP; }
-"__block" { next_token(yystring()); return KW_BLOCK; }
+"$"  { next_token(yystring()); return BUCK; }
+"&"  {next_token(yystring()); return AMP; }
+"="  {next_token(yystring()); return EQ; }
+"<"  {next_token(yystring()); return LT; }
+">"  {next_token(yystring()); return GT; }
+";"  {next_token(yystring()); return SCOLON; }
+":"  {next_token(yystring()); return COLON;}
+"?"  {next_token(yystring()); return QMARK;}
+","  {next_token(yystring()); return COMMA; }
+"."  {next_token(yystring()); return DOT; }
+".." {next_token(yystring()); return DIAP; }
+"{"  {next_token(yystring()); return LCB; }
+"}"  {next_token(yystring()); return RCB; }
+"("  {next_token(yystring()); return LB; }
+")"  {next_token(yystring()); return RB; }
+"["  {next_token(yystring()); return LSB; }
+"]"  {next_token(yystring()); return RSB; }
+"+"  {next_token(yystring()); return PLUS; }
+"-"  {next_token(yystring()); return MINUS; }
+"*"  {next_token(yystring()); return MUL; }
+"/"  {next_token(yystring()); return DIV; }
+"%"  {next_token(yystring()); return MOD; }
+"#"  {next_token(yystring()); return SHARP; }
+"@"  {next_token(yystring()); return AT; }
+"==" {next_token(yystring()); return DBLEQ; }
+"<=" {next_token(yystring()); return LEQ; }
+"=>" {next_token(yystring()); return EQG; }
+">=" {next_token(yystring()); return GEQ; }
+"!=" {next_token(yystring()); return NEQ; }
+"&&" {next_token(yystring()); return DBLAMP; }
+"||" {next_token(yystring()); return DBLPIPE; }
+"-->" {next_token(yystring()); return ARROW; }
+"<--" {next_token(yystring()); return LARROW; }
+"<<" {next_token(yystring()); return LARR; }
+">>" {next_token(yystring()); return RARR; }
+"C++" {next_token(yystring()); return KW_CPP; }
+"__block" {next_token(yystring()); return KW_BLOCK; }
 
 [0-9]+ {
+	SAVE_TOKEN;
 	next_token(yystring());
 	return INT;
 }
 
 [0-9]+"."[0-9]+ {
+	SAVE_TOKEN;
 	next_token(yystring()); 
 	return REAL;
 }
