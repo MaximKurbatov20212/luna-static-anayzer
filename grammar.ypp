@@ -251,20 +251,16 @@ ext_params_seq:
 	code_df_param  { 
         $$ = new ext_params_seq();
         $$->params_->push_back($1);
-        // std::cerr << "code df param: " << $1->to_string() << std::endl;
     }
 
 	| ext_params_seq COMMA code_df_param {
         $1->params_->push_back($3);
-        // std::cerr << $3 << std::endl;
-        // std::cerr << "ext params seq\n";
     }
 	; 
 
 code_df_param:
     type code_df {
         $$ = new code_df_param($1, $2);
-        std::cerr << "code df param: " << $$->to_string() << std::endl;
     }
 
     | error COMMA {

@@ -94,7 +94,6 @@ NOCPU { next_token(yystring()); return KW_NOCPU;}
 ">>" {next_token(yystring()); return RARR; }
 "C++" {next_token(yystring()); return KW_CPP; }
 "__block" {next_token(yystring()); return KW_BLOCK; }
-/* "#define" {next_token(yystring()); return KW_DEFINE;} */
 
 [0-9]+ {
 	SAVE_TOKEN;
@@ -110,7 +109,6 @@ NOCPU { next_token(yystring()); return KW_NOCPU;}
 
 \/\/.*$ { next_token(yystring()); /* comments */ }
 
-\/\/[0-9][a-z]{$ { next_token(yystring()); /* comments */ }
 
 \"[^\"]*\" { 
 	next_token(yystring());
