@@ -18,9 +18,12 @@ extern error_reporter reporter;
 
 extern int cur_position_in_line;
 extern int line_num;
+extern ast* ast_;
 
-#define SAVE_TOKEN yylval.string_ = new luna_string(new std::string(yytext)); \
-				std::cerr << "new token: " << *(yylval.string_->value_) << std::endl
+#define SAVE_TOKEN std::string* token = new std::string(yytext); \
+				yylval.string_ = new luna_string(token); \
+				ast_->push_token(token)
+				
 
 #define YY_USER_ACTION yylloc.first_line = line_num; \
 	yylloc.first_column = cur_position_in_line;
@@ -45,8 +48,8 @@ while { next_token(yystring()); return KW_WHILE; }
 int { SAVE_TOKEN; next_token(yystring()); return KW_INT; }
 real { SAVE_TOKEN; next_token(yystring()); return KW_REAL; }
 string { SAVE_TOKEN; next_token(yystring()); return KW_STRING; }
-name { next_token(yystring()); return KW_NAME; }
-value { next_token(yystring()); return KW_VALUE; }
+name { SAVE_TOKEN; next_token(yystring()); return KW_NAME; }
+value { SAVE_TOKEN; next_token(yystring()); return KW_VALUE; }
 rush { next_token(yystring()); return KW_RUSH; }
 static { next_token(yystring()); return KW_STATIC; }
 static_for { next_token(yystring()); return KW_STATIC_FOR; }
@@ -54,7 +57,7 @@ unrolling { next_token(yystring()); return KW_UNROLLING; }
 CUDA { next_token(yystring()); return KW_CUDA;}
 NOCPU { next_token(yystring()); return KW_NOCPU;}
 
-"$"  { next_token(yystring()); return BUCK; }
+"$"  {next_token(yystring()); return BUCK; }
 "&"  {next_token(yystring()); return AMP; }
 "="  {next_token(yystring()); return EQ; }
 "<"  {next_token(yystring()); return LT; }
@@ -91,6 +94,7 @@ NOCPU { next_token(yystring()); return KW_NOCPU;}
 ">>" {next_token(yystring()); return RARR; }
 "C++" {next_token(yystring()); return KW_CPP; }
 "__block" {next_token(yystring()); return KW_BLOCK; }
+/* "#define" {next_token(yystring()); return KW_DEFINE;} */
 
 [0-9]+ {
 	SAVE_TOKEN;
@@ -105,6 +109,8 @@ NOCPU { next_token(yystring()); return KW_NOCPU;}
 }
 
 \/\/.*$ { next_token(yystring()); /* comments */ }
+
+\/\/[0-9][a-z]{$ { next_token(yystring()); /* comments */ }
 
 \"[^\"]*\" { 
 	next_token(yystring());
@@ -153,14 +159,16 @@ std::string yystring() {
 }
 
 void yyerror(const char* msg) {
-	// if (has_errors) return;
+	/* if (has_errors) return; */
 
-	// reporter.report(ERROR_LEVEL::ERROR, 
-    //         line,
-	// 		line_num,
-	// 		cur_position_in_line,
-	// 		"Sorry, we can't find out type of this problem.\n\t  Report this example: https://vk.com/morning__coffee"
-    //     );
+	 /* reporter.report(ERROR_LEVEL::ERROR, 
+          line,
+	 		line_num,
+	 		cur_position_in_line,
+	 "Sorry, we can't find out type of this problem.\n\t  Report this example: https://vk.com/morning__coffee"
+         ); */
 
-	// has_errors = true;
+	// has_errors = true; */
+
+	/* std::cerr << msg << "ERROR\n"; */
 }

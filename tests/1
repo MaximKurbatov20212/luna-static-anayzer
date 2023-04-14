@@ -1,0 +1,7 @@
+import a(int) as a;
+
+sub main(int a) {
+	df x;
+	df y;
+	init(x);
+}

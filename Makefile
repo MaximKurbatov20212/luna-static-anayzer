@@ -7,7 +7,7 @@ bison: grammar.ypp
 	bison -d grammar.ypp
 
 analyzer: grammar.tab.cpp lex.yy.c main.cpp
-	g++ -std=c++11 lex.yy.c grammar.tab.cpp main.cpp ast_analyzer.cpp -o a.out -fsanitize=address
+	g++ -std=c++11 lex.yy.c grammar.tab.cpp main.cpp ast_analyzer.cpp -o a.out
 
 clean: 
 	rm grammar.tab.cpp  grammar.tab.hpp lex.yy.c  

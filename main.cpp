@@ -10,10 +10,12 @@ extern int yyparse();
 extern FILE *yyin;
 int line_num = 1;
 std::string line, prev_line;
-program* ast;
 extern error_reporter reporter;
 
+ast* ast_ = new ast();
+
 int main(int argc, char** argv) {
+
     if (argc != 2) {
         std::cerr << "Bad number of args. Usage: ./a.out test.fa" << std::endl;
         return EXIT_ERROR;
@@ -26,7 +28,6 @@ int main(int argc, char** argv) {
         return EXIT_ERROR;
     }
 
-
     std::cerr << "parse\n";
 
     yyparse();
@@ -36,16 +37,15 @@ int main(int argc, char** argv) {
     //     return EXIT_ERROR;
     // }
 
-    // std::cerr << ast->to_string() << std::endl;
+    // std::cerr << "ast\n";
+    // std::cerr << ast_->to_string() << std::endl;
 
-    // ast_analyzer analyzer = ast_analyzer(ast, yyin);
+    // ast_analyzer analyzer = ast_analyzer(ast_, yyin);
 
-    std::cerr << "analyze\n";
+    // std::cerr << "analyze\n";
     // analyzer.analyze();
 
-    std::cout << sizeof(program) << std::endl;
-    std::cout << sizeof(import) << std::endl;
-    delete ast;
+    delete ast_;
     fclose(yyin);
     return EXIT_SUCCESS;
 }

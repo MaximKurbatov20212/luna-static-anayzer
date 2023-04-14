@@ -22,6 +22,12 @@ public:
     {
         if (errors_number < LIMIT_ERRORS) {
             std::string lvl = level == ERROR ? "Error" : "Warning";
+
+            if (error_line == "") {
+                fprintf(stderr, "%s. %s\n", lvl.c_str(), error_msg.c_str());
+                return;
+            }
+
             fprintf(stderr, "%s. Line %d-%d: %s\n\t%s\n", lvl.c_str(), line, pos, error_msg.c_str(), error_line.c_str());
             fprintf(stderr, "\t%s^---- here\n", repeat_spaces(pos).c_str());
 

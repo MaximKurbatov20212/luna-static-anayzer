@@ -25,7 +25,7 @@ extern int line_num;
 extern string line, prev_line; 
 
 int cur_position_in_line = 0;
-extern program* ast;
+extern ast* ast_;
 
 error_reporter reporter;
 
@@ -95,6 +95,7 @@ error_reporter reporter;
 %token<string_> PLUS MINUS MUL DIV MOD TAB WS SWS LN BUCK
 %token<string_> PIPE ASSIGN LCB RCB IDX DBLPIPE DBLAMP
 
+
 %type<program_> program;
 %type<sub_def_> sub_def;
 %type<statement_> statement;
@@ -135,7 +136,7 @@ error_reporter reporter;
 %type<string_> code_df;
 
 %type<param_seq_> params_seq;
-%type<param_> param;
+%type<param_> param; 
 
 %nonassoc IFX
 %nonassoc KW_ELSE
@@ -152,11 +153,10 @@ error_reporter reporter;
 
 all: 
 	program { 
-        ast = $1;
+        ast_->set_program($1);
     }
     | {}
 
-// TODO: use std::move
 program:    
     sub_def {
         $$ = new program();
@@ -198,6 +198,7 @@ sub_def:
         $$ = new cxx_block_def($2);
     }
 
+
     | KW_CPP NAME KW_BLOCK LB error RB {
         reporter.report(ERROR_LEVEL::ERROR, 
             "Unexpected token",
@@ -218,29 +219,31 @@ sub_def:
         );
     }
 
-    | KW_IMPORT code_id LB opt_ext_params error SCOLON {
+    /* | KW_IMPORT code_id LB opt_ext_params error SCOLON {
         reporter.report(ERROR_LEVEL::ERROR, 
             "Unexpected token",
             line,
             @5.first_line,
             @5.first_column,
             ")"
-        );
-    }
+        ); */
+    /* } */
 
-    | KW_IMPORT code_id error SCOLON {
+    /* | KW_IMPORT code_id error SCOLON {
         reporter.report(ERROR_LEVEL::ERROR, 
             "Unexpected token",
             line,
             @3.first_line,
             @3.first_column,
             "("
-        );
-    }
+        ); */
+    /* } */
 ;
 
 opt_ext_params:
-    ext_params_seq { $$ = new opt_ext_params($1); }
+    ext_params_seq { 
+        $$ = new opt_ext_params($1);
+    }
 	| { $$ = new opt_ext_params(nullptr); }
 	;
 
@@ -248,30 +251,32 @@ ext_params_seq:
 	code_df_param  { 
         $$ = new ext_params_seq();
         $$->params_->push_back($1);
+        // std::cerr << "code df param: " << $1->to_string() << std::endl;
     }
+
 	| ext_params_seq COMMA code_df_param {
         $1->params_->push_back($3);
+        // std::cerr << $3 << std::endl;
+        // std::cerr << "ext params seq\n";
     }
 	; 
 
 code_df_param:
     type code_df {
         $$ = new code_df_param($1, $2);
-        std::cerr << "code df param\n";
-        std::cerr << $1 << " : " << *($1->value_)<< std::endl;
-        if ($2) {
-            std::cerr << $2 << " : " << *($2->value_) <<std::endl;
-        }
+        std::cerr << "code df param: " << $$->to_string() << std::endl;
     }
-    | error SCOLON {
+
+    | error COMMA {
 	    reporter.report(ERROR_LEVEL::ERROR,
             "Unexpected token",
             line, 
             line_num,
             @1.first_column,
             "int, string, value, real, name"
-        );
-	} 
+        ); 
+        $$ = nullptr;
+    }
 ;
 
 code_df:
@@ -294,6 +299,7 @@ block:
         $$ = new block();
         $$->statement_seq_->statements_->push_back($1); 
     }
+
 	| LCB opt_dfdecls statement_seq RCB opt_behavior { 
         $$ = new block($2, $3, $5); 
     }
@@ -309,16 +315,20 @@ opt_dfdecls:
 	;
 
 dfdecls:
-	KW_DF name_seq SCOLON { $$ = new dfdecls($2); }
+	KW_DF name_seq SCOLON { 
+        $$ = new dfdecls($2); 
+    }
 	;
 
 name_seq:
 	NAME { 
         $$ = new name_seq();
         $$->names_->push_back($1); 
+        $1->set_position(@1.first_line, @1.first_column);
     }
 	| name_seq COMMA NAME {
         $1->names_->push_back($3);
+        $3->set_position(@1.first_line, @1.first_column);
     }
 	;
 
@@ -363,7 +373,7 @@ control_pragma:
     }
     | 
     {
-        $$ = nullptr;
+        $$ =  nullptr;
     }
 	    
 statement:
@@ -376,7 +386,6 @@ statement:
 
 cf_statement: opt_label code_id opt_exprs opt_setdf_rules opt_rules opt_behavior SCOLON {
         $$ = new cf_statement($1, $2, $3, $4, $5, $6);
-        // std::cerr << "cf statement success: " << *($2->value_) << std::endl ;
     }
 	;
 
@@ -384,7 +393,7 @@ opt_behavior:
 	AT LCB behv_pragmas_seq RCB {
         $$ = new opt_behavior($3);
     }
-	| { $$ = new opt_behavior(); }
+	| { $$ = new opt_behavior(nullptr); }
 	;
 
 behv_pragmas_seq:
@@ -465,13 +474,13 @@ opt_label:
 	KW_CF id COLON { $$ = new opt_label($2); }
 	|   
     {
-        ////std::cerr << "opt label is nullptr" << std::endl;
         $$ = new opt_label(nullptr);
 	}
 	;
 
 id:
-	NAME { $$ = new simple_id($1); }
+	NAME { $$ = new simple_id($1->value_); delete $1;}
+
 	| id LSB expr RSB {
         $$ = new complex_id($1, $3);
     }
@@ -479,11 +488,9 @@ id:
 
 opt_exprs:
 	LB exprs_seq RB { 
-        ////std::cerr << "opt_exprs" << std::endl;
         $$ = new opt_exprs($2); 
     }
 	| LB RB { 
-        ////std::cerr << "exprs_seq is nullptr" << std::endl;
         $$ = new opt_exprs(nullptr); 
         }
 	;
@@ -501,7 +508,7 @@ exprs_seq:
 opt_setdf_rules:
 	RARR opt_exprs { 
         $$ = new opt_setdf_rules($2); 
-        // std::cerr << "opt_setdf_rules" << std::endl;
+        // // // std::cerr << "opt_setdf_rules" << std::endl;
         }
     | {
         $$ = new opt_setdf_rules(nullptr); 
@@ -519,9 +526,6 @@ code_id:
 	NAME { 
         $$ = $1;
         $$->set_position(@1.first_line, @1.first_column);
-
-        std::cerr << "code id\n";
-        std::cerr << $1 << " : " << *($1->value_) <<  std::endl;
     }
 	;
 
@@ -546,7 +550,7 @@ expr:
 	| expr DBLAMP expr  { $$ = new dblamp($1, $3); }
 	| expr DBLPIPE expr { $$ = new dblpipe($1, $3); }
 	| LB expr RB { $$ = $2; }
-	| id {}
+	| id { $$ = $1; }
 	| expr QMARK expr COLON expr {}
 	;
 
