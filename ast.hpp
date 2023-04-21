@@ -6,13 +6,13 @@
 #include <vector>
 #include <cstring>
 
+class block;
+
 class virtual_token {
 public:
     unsigned int line_;
-    unsigned int pos_;
 
-    void set_position(uint line, uint pos) {
-        pos_ = pos;
+    void set_position(uint line) {
         line_ = line;
     }
 
@@ -30,7 +30,6 @@ public:
     luna_string() : value_(new std::string()) {}
 
     ~luna_string() {
-        // delete value_;
         // no delete because tokens_ will be free explicitly. See ~ast()
     }
 
@@ -54,7 +53,7 @@ public:
 
     ~id() {
         // std::cerr << *value_ << std::endl;
-        std::cerr << "id dtor\n";
+        // std::cerr << "id dtor\n";
     }
 };
 
@@ -80,7 +79,7 @@ class param : public virtual_token {
 class param_seq : public virtual_token {
     public:    
         std::vector<param *>* params_;
-        param_seq(std::vector<param *>* params, uint pos = 0) : params_(params) {}
+        param_seq(std::vector<param *>* params) : params_(params) {}
 
         param_seq() : params_(new std::vector<param *>()) {}
 
@@ -174,7 +173,10 @@ class opt_dfdecls : public virtual_token {
         }
 };
 
-class statement : public virtual_token {};
+class statement : public virtual_token {
+    public:
+        block* block_;
+};
 
 class statement_seq : public virtual_token {
     public:
@@ -691,8 +693,10 @@ class cxx_block_def : public sub_def {
 class if_statement : public statement {
     public:
         expr *expr_;
-        block *block_;
-        if_statement(expr *expr, block *block) : block_(block), expr_(expr) {}
+        // block *block_;
+        if_statement(expr *expr, block *block) :  expr_(expr) {
+            block_ = block;
+        }
 
         ~if_statement() {
             delete expr_;
@@ -711,13 +715,15 @@ class for_statement : public statement {
         luna_string *name_;
         expr *expr_1_;
         expr *expr_2_;
-        block *block_;
+        // block *block_;
         for_statement(control_pragma *control_pragma,
                 luna_string *name,
                 expr *expr_1,
                 expr *expr_2,
                 block *block)
-            : control_pragma_(control_pragma), name_(name), expr_1_(expr_1), expr_2_(expr_2), block_(block) {}
+            : control_pragma_(control_pragma), name_(name), expr_1_(expr_1), expr_2_(expr_2) {
+                block_ = block;
+            }
         
         ~for_statement() {
             delete control_pragma_;
@@ -772,8 +778,10 @@ class assign_seq : public virtual_token {
 class let_statement : public statement {
     public:
         assign_seq *assign_seq_;
-        block *block_;
-        let_statement(assign_seq *assign_seq_, block *block) : assign_seq_(assign_seq_), block_(block) {}
+        // block *block_;
+        let_statement(assign_seq *assign_seq_, block *block) : assign_seq_(assign_seq_) {
+            block_ = block;
+        }
 
         ~let_statement() {
             delete assign_seq_;
@@ -796,7 +804,7 @@ class while_statement : public statement {
         luna_string *left_;
         expr *expr_;
         expr *right_;
-        block *block_;
+        // block *block_;
         id *id_;
 
         while_statement(control_pragma *control_pragma,
@@ -805,7 +813,9 @@ class while_statement : public statement {
                 expr *right,
                 id* id,
                 block *block) 
-            : block_(block), expr_(expr_), left_(left), right_(right), id_(id), control_pragma_(control_pragma) {}
+            :  expr_(expr_), left_(left), right_(right), id_(id), control_pragma_(control_pragma) {
+                block_ = block;
+            }
 
         ~while_statement() {
             delete control_pragma_;

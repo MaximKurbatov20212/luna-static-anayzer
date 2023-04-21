@@ -20,6 +20,8 @@ private:
     bool analyze_df_double_declaration();
     bool analyze_existance_main_cf();
     bool analyze_cf_redeclaration();
+    bool analyze_df_redeclaration();
+    bool has_df_redeclaration(std::vector<param *>* params, block* block_);
 
     template <typename T>
     std::vector<T> find_pairs(std::vector<T>* v);

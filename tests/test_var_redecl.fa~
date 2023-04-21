@@ -1,0 +1,14 @@
+sub main(int y, name y) {
+    df x;
+    cf y: init();
+
+    if x != 1 {
+        df x, y;
+        init();
+    }
+
+    for x=1..10  {
+        df x, y, x;
+        init();
+    }
+}

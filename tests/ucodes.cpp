@@ -8,6 +8,10 @@ void c_init(int val, OutputDF &df) {
         printf("c_init: %d, size: %d\n", val, (int)df.getSize());
 }
 
+void c_print_int(int i) {
+        printf("%d\n", i);
+}
+
 void c_print(InputDF& i) {
         printf("%d\n", i.getValue<int>());
 }

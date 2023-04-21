@@ -40,10 +40,10 @@ int main(int argc, char** argv) {
     // std::cerr << "ast\n";
     // std::cerr << ast_->to_string() << std::endl;
 
-    // ast_analyzer analyzer = ast_analyzer(ast_, yyin);
+    ast_analyzer analyzer = ast_analyzer(ast_, yyin);
 
     // std::cerr << "analyze\n";
-    // analyzer.analyze();
+    analyzer.analyze();
 
     delete ast_;
     fclose(yyin);

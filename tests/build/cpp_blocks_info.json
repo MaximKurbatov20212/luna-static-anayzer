@@ -1,0 +1,1630 @@
+{
+    "0": {
+        "pos": 3267,
+        "comment": "initial launcher: sub main(string arg1)"
+    },
+    "1": {
+        "pos": 3267,
+        "comment": "sub main"
+    },
+    "2": {
+        "pos": 3545,
+        "comment": "entry (migrate) cf _l82: getFG_Size(arg1, size_x, size_y, size_z, size);"
+    },
+    "3": {
+        "pos": 3597,
+        "comment": "entry (migrate) for i=0..(size_x)-(1);"
+    },
+    "4": {
+        "pos": 3597,
+        "comment": "request size_x"
+    },
+    "5": {
+        "pos": 3615,
+        "comment": "body fork: for i = 0 .. (size_x)-(1)"
+    },
+    "6": {
+        "pos": 3629,
+        "comment": "entry (migrate) for j=0..(size_y)-(1);"
+    },
+    "7": {
+        "pos": 3629,
+        "comment": "request size_y"
+    },
+    "8": {
+        "pos": 3647,
+        "comment": "body fork: for j = 0 .. (size_y)-(1)"
+    },
+    "9": {
+        "pos": 3669,
+        "comment": "entry (migrate) for k=0..(size_z)-(1);"
+    },
+    "10": {
+        "pos": 3669,
+        "comment": "request size_z"
+    },
+    "11": {
+        "pos": 3687,
+        "comment": "body fork: for k = 0 .. (size_z)-(1)"
+    },
+    "12": {
+        "pos": 3735,
+        "comment": "entry (migrate) cf loadData[i][j][k]: loadData(((((k)*(size_y))*(size_x))+((j)*(size_x)))+(i), size, params[i][j][k], rank_x[i][j][k], rank_y[i][j][k], rank_z[i][j][k], dim_x[i][j][k], dim_y[i][j][k], dim_z[i][j][k], u_c[1][1][i][j][k]);"
+    },
+    "13": {
+        "pos": 3735,
+        "comment": "request size_y, size_x, size"
+    },
+    "14": {
+        "pos": 3735,
+        "comment": "execute cf loadData[i][j][k]: loadData(((((k)*(size_y))*(size_x))+((j)*(size_x)))+(i), size, params[i][j][k], rank_x[i][j][k], rank_y[i][j][k], rank_z[i][j][k], dim_x[i][j][k], dim_y[i][j][k], dim_z[i][j][k], u_c[1][1][i][j][k]);"
+    },
+    "15": {
+        "pos": 4029,
+        "comment": "entry (migrate) cf initpar_x[i][j][k]: initforParams(((((k)*(size_y))*(size_x))+((j)*(size_x)))+(i), 1, params[i][j][k], cntfor[1][i][j][k], cntstep[1][i][j][k]);"
+    },
+    "16": {
+        "pos": 4029,
+        "comment": "request params[i][j][k], size_y, size_x"
+    },
+    "17": {
+        "pos": 4029,
+        "comment": "execute cf initpar_x[i][j][k]: initforParams(((((k)*(size_y))*(size_x))+((j)*(size_x)))+(i), 1, params[i][j][k], cntfor[1][i][j][k], cntstep[1][i][j][k]);"
+    },
+    "18": {
+        "pos": 4216,
+        "comment": "entry (migrate) cf initpar_y[i][j][k]: initforParams(((((k)*(size_y))*(size_x))+((j)*(size_x)))+(i), 2, params[i][j][k], cntfor[2][i][j][k], cntstep[2][i][j][k]);"
+    },
+    "19": {
+        "pos": 4216,
+        "comment": "request size_y, size_x, params[i][j][k]"
+    },
+    "20": {
+        "pos": 4216,
+        "comment": "execute cf initpar_y[i][j][k]: initforParams(((((k)*(size_y))*(size_x))+((j)*(size_x)))+(i), 2, params[i][j][k], cntfor[2][i][j][k], cntstep[2][i][j][k]);"
+    },
+    "21": {
+        "pos": 4403,
+        "comment": "entry (migrate) cf initpar_y[i][j][k]: initforParams(((((k)*(size_y))*(size_x))+((j)*(size_x)))+(i), 3, params[i][j][k], cntfor[3][i][j][k], cntstep[3][i][j][k]);"
+    },
+    "22": {
+        "pos": 4403,
+        "comment": "request size_y, size_x, params[i][j][k]"
+    },
+    "23": {
+        "pos": 4403,
+        "comment": "execute cf initpar_y[i][j][k]: initforParams(((((k)*(size_y))*(size_x))+((j)*(size_x)))+(i), 3, params[i][j][k], cntfor[3][i][j][k], cntstep[3][i][j][k]);"
+    },
+    "24": {
+        "pos": 4615,
+        "comment": "entry (migrate) cf _l98: initConst(params[0][0][0], T, tprint, tau);"
+    },
+    "25": {
+        "pos": 4615,
+        "comment": "request params[0][0][0]"
+    },
+    "26": {
+        "pos": 4615,
+        "comment": "execute cf _l98: initConst(params[0][0][0], T, tprint, tau);"
+    },
+    "27": {
+        "pos": 4660,
+        "comment": "entry (migrate) cf _l99: rinit(0.000000, curT[0]);"
+    },
+    "28": {
+        "pos": 4716,
+        "comment": "entry (set counter) while real((curT[(it)-(1)])<(T)), it=1..out iter;"
+    },
+    "29": {
+        "pos": 4684,
+        "comment": "migrate: while real((curT[(it)-(1)])<(T)), it = 1 .. out iter"
+    },
+    "30": {
+        "pos": 4684,
+        "comment": "request curT[(it)-(1)], T"
+    },
+    "31": {
+        "pos": 4734,
+        "comment": "body fork: while real((curT[(it)-(1)])<(T)), it = 1 .. out iter"
+    },
+    "32": {
+        "pos": 4925,
+        "comment": "entry (migrate) cf _l106: rinit((curT[(it)-(1)])+(tau), curT[it]);"
+    },
+    "33": {
+        "pos": 4925,
+        "comment": "request curT[(it)-(1)], tau"
+    },
+    "34": {
+        "pos": 4925,
+        "comment": "execute cf _l106: rinit((curT[(it)-(1)])+(tau), curT[it]);"
+    },
+    "35": {
+        "pos": 4983,
+        "comment": "entry (migrate) for y=0..(size_y)-(1);"
+    },
+    "36": {
+        "pos": 4983,
+        "comment": "request size_y"
+    },
+    "37": {
+        "pos": 5000,
+        "comment": "body fork: for y = 0 .. (size_y)-(1)"
+    },
+    "38": {
+        "pos": 5013,
+        "comment": "entry (migrate) for z=0..(size_z)-(1);"
+    },
+    "39": {
+        "pos": 5013,
+        "comment": "request size_z"
+    },
+    "40": {
+        "pos": 5030,
+        "comment": "body fork: for z = 0 .. (size_z)-(1)"
+    },
+    "41": {
+        "pos": 5076,
+        "comment": "entry (migrate) cf init_alfa_beta_x[0][y][z]: init_alfa_beta(cntstep[1][0][y][z], alfa_beta_beg[1][it][0][y][z]);"
+    },
+    "42": {
+        "pos": 5076,
+        "comment": "request cntstep[1][0][y][z]"
+    },
+    "43": {
+        "pos": 5076,
+        "comment": "execute cf init_alfa_beta_x[0][y][z]: init_alfa_beta(cntstep[1][0][y][z], alfa_beta_beg[1][it][0][y][z]);"
+    },
+    "44": {
+        "pos": 5197,
+        "comment": "entry (migrate) for x=0..(size_x)-(1);"
+    },
+    "45": {
+        "pos": 5197,
+        "comment": "request size_x"
+    },
+    "46": {
+        "pos": 5214,
+        "comment": "body fork: for x = 0 .. (size_x)-(1)"
+    },
+    "47": {
+        "pos": 5259,
+        "comment": "entry (migrate) cf calcCoef_x[x][y][z]: calcCoef_x(params[x][y][z], u_c[1][it][x][y][z], a[1][it][x][y][z], b[1][it][x][y][z], c[1][it][x][y][z], f[1][it][x][y][z]);"
+    },
+    "48": {
+        "pos": 5259,
+        "comment": "request params[x][y][z], u_c[1][it][x][y][z]"
+    },
+    "49": {
+        "pos": 5259,
+        "comment": "execute cf calcCoef_x[x][y][z]: calcCoef_x(params[x][y][z], u_c[1][it][x][y][z], a[1][it][x][y][z], b[1][it][x][y][z], c[1][it][x][y][z], f[1][it][x][y][z]);"
+    },
+    "50": {
+        "pos": 5482,
+        "comment": "entry (migrate) cf init_uend_x[(size_x)-(1)][y][z]: init_uend(cntstep[1][(size_x)-(1)][y][z], ubeg[1][it][(size_x)-(1)][y][z]);"
+    },
+    "51": {
+        "pos": 5482,
+        "comment": "request_preliminary size_x"
+    },
+    "52": {
+        "pos": 5482,
+        "comment": "migrate"
+    },
+    "53": {
+        "pos": 5482,
+        "comment": "request size_x"
+    },
+    "54": {
+        "pos": 5482,
+        "comment": "pass to next rule: request cntstep[1][(size_x)-(1)][y][z]"
+    },
+    "55": {
+        "pos": 5482,
+        "comment": "request cntstep[1][(size_x)-(1)][y][z]"
+    },
+    "56": {
+        "pos": 5482,
+        "comment": "execute cf init_uend_x[(size_x)-(1)][y][z]: init_uend(cntstep[1][(size_x)-(1)][y][z], ubeg[1][it][(size_x)-(1)][y][z]);"
+    },
+    "57": {
+        "pos": 5661,
+        "comment": "entry (migrate) for y=0..(size_y)-(1);"
+    },
+    "58": {
+        "pos": 5661,
+        "comment": "request size_y"
+    },
+    "59": {
+        "pos": 5678,
+        "comment": "body fork: for y = 0 .. (size_y)-(1)"
+    },
+    "60": {
+        "pos": 5691,
+        "comment": "entry (migrate) for z=0..(size_z)-(1);"
+    },
+    "61": {
+        "pos": 5691,
+        "comment": "request size_z"
+    },
+    "62": {
+        "pos": 5708,
+        "comment": "body fork: for z = 0 .. (size_z)-(1)"
+    },
+    "63": {
+        "pos": 5724,
+        "comment": "entry (migrate) for j=0..(cntfor[1][0][y][z])-(1);"
+    },
+    "64": {
+        "pos": 5724,
+        "comment": "request cntfor[1][0][y][z]"
+    },
+    "65": {
+        "pos": 5753,
+        "comment": "body fork: for j = 0 .. (cntfor[1][0][y][z])-(1)"
+    },
+    "66": {
+        "pos": 5802,
+        "comment": "entry (migrate) cf calccoef_pr_x[j][0][y][z]: calccoef_pr_x((((z)*(size_y))*(size_z))+((y)*(size_x)), cntstep[1][0][y][z], j, params[0][y][z], a[1][it][0][y][z], b[1][it][0][y][z], c[1][it][0][y][z], f[1][it][0][y][z], alfa[1][it][j][0][y][z], beta[1][it][j][0][y][z], alfa_beta_beg[1][it][0][y][z], alfa_beta_beg6[1][it][j][1][y][z]);"
+    },
+    "67": {
+        "pos": 5802,
+        "comment": "request size_x, params[0][y][z], f[1][it][0][y][z], a[1][it][0][y][z], b[1][it][0][y][z], size_y, cntstep[1][0][y][z], alfa_beta_beg[1][it][0][y][z], c[1][it][0][y][z], size_z"
+    },
+    "68": {
+        "pos": 5802,
+        "comment": "execute cf calccoef_pr_x[j][0][y][z]: calccoef_pr_x((((z)*(size_y))*(size_z))+((y)*(size_x)), cntstep[1][0][y][z], j, params[0][y][z], a[1][it][0][y][z], b[1][it][0][y][z], c[1][it][0][y][z], f[1][it][0][y][z], alfa[1][it][j][0][y][z], beta[1][it][j][0][y][z], alfa_beta_beg[1][it][0][y][z], alfa_beta_beg6[1][it][j][1][y][z]);"
+    },
+    "69": {
+        "pos": 6171,
+        "comment": "migrate: if (size_x)>(1)"
+    },
+    "70": {
+        "pos": 6171,
+        "comment": "request size_x"
+    },
+    "71": {
+        "pos": 6185,
+        "comment": "body fork: if (size_x)>(1)"
+    },
+    "72": {
+        "pos": 6233,
+        "comment": "entry (migrate) cf calcVal_x[j][0][y][z]: calcVal((((z)*(size_y))*(size_z))+((y)*(size_x)), 1, cntstep[1][0][y][z], params[0][y][z], alfa[1][it][j][0][y][z], beta[1][it][j][0][y][z], u_cur[1][it][j][0][y][z], ubeg6[1][it][j][(0)-(1)][y][z], ubeg6[1][it][j][0][y][z]);"
+    },
+    "73": {
+        "pos": 6233,
+        "comment": "request cntstep[1][0][y][z], ubeg6[1][it][j][0][y][z], size_x, alfa[1][it][j][0][y][z], size_y, params[0][y][z], size_z, beta[1][it][j][0][y][z]"
+    },
+    "74": {
+        "pos": 6233,
+        "comment": "execute cf calcVal_x[j][0][y][z]: calcVal((((z)*(size_y))*(size_z))+((y)*(size_x)), 1, cntstep[1][0][y][z], params[0][y][z], alfa[1][it][j][0][y][z], beta[1][it][j][0][y][z], u_cur[1][it][j][0][y][z], ubeg6[1][it][j][(0)-(1)][y][z], ubeg6[1][it][j][0][y][z]);"
+    },
+    "75": {
+        "pos": 6669,
+        "comment": "entry (migrate) for x=1..(size_x)-(2);"
+    },
+    "76": {
+        "pos": 6669,
+        "comment": "request size_x"
+    },
+    "77": {
+        "pos": 6686,
+        "comment": "body fork: for x = 1 .. (size_x)-(2)"
+    },
+    "78": {
+        "pos": 6705,
+        "comment": "entry (migrate) for j=0..(cntfor[1][x][y][z])-(1);"
+    },
+    "79": {
+        "pos": 6705,
+        "comment": "request cntfor[1][x][y][z]"
+    },
+    "80": {
+        "pos": 6734,
+        "comment": "body fork: for j = 0 .. (cntfor[1][x][y][z])-(1)"
+    },
+    "81": {
+        "pos": 6786,
+        "comment": "entry (migrate) cf calccoef_pr_x[j][x][y][z]: calccoef_pr_x(((((z)*(size_y))*(size_z))+((y)*(size_x)))+(x), cntstep[1][x][y][z], j, params[x][y][z], a[1][it][x][y][z], b[1][it][x][y][z], c[1][it][x][y][z], f[1][it][x][y][z], alfa[1][it][j][x][y][z], beta[1][it][j][x][y][z], alfa_beta_beg6[1][it][j][x][y][z], alfa_beta_beg6[1][it][j][(x)+(1)][y][z]);"
+    },
+    "82": {
+        "pos": 6786,
+        "comment": "request alfa_beta_beg6[1][it][j][x][y][z], c[1][it][x][y][z], size_y, a[1][it][x][y][z], params[x][y][z], f[1][it][x][y][z], size_z, b[1][it][x][y][z], size_x, cntstep[1][x][y][z]"
+    },
+    "83": {
+        "pos": 6786,
+        "comment": "execute cf calccoef_pr_x[j][x][y][z]: calccoef_pr_x(((((z)*(size_y))*(size_z))+((y)*(size_x)))+(x), cntstep[1][x][y][z], j, params[x][y][z], a[1][it][x][y][z], b[1][it][x][y][z], c[1][it][x][y][z], f[1][it][x][y][z], alfa[1][it][j][x][y][z], beta[1][it][j][x][y][z], alfa_beta_beg6[1][it][j][x][y][z], alfa_beta_beg6[1][it][j][(x)+(1)][y][z]);"
+    },
+    "84": {
+        "pos": 7234,
+        "comment": "entry (migrate) cf calcVal_x[j][x][y][z]: calcVal(((((z)*(size_y))*(size_z))+((y)*(size_x)))+(x), 1, cntstep[1][x][y][z], params[x][y][z], alfa[1][it][j][x][y][z], beta[1][it][j][x][y][z], u_cur[1][it][j][x][y][z], ubeg6[1][it][j][(x)-(1)][y][z], ubeg6[1][it][j][x][y][z]);"
+    },
+    "85": {
+        "pos": 7234,
+        "comment": "request size_x, size_y, ubeg6[1][it][j][x][y][z], cntstep[1][x][y][z], params[x][y][z], beta[1][it][j][x][y][z], size_z, alfa[1][it][j][x][y][z]"
+    },
+    "86": {
+        "pos": 7234,
+        "comment": "execute cf calcVal_x[j][x][y][z]: calcVal(((((z)*(size_y))*(size_z))+((y)*(size_x)))+(x), 1, cntstep[1][x][y][z], params[x][y][z], alfa[1][it][j][x][y][z], beta[1][it][j][x][y][z], u_cur[1][it][j][x][y][z], ubeg6[1][it][j][(x)-(1)][y][z], ubeg6[1][it][j][x][y][z]);"
+    },
+    "87": {
+        "pos": 7649,
+        "comment": "entry (migrate) for j=0..(cntfor[1][(size_x)-(1)][y][z])-(1);"
+    },
+    "88": {
+        "pos": 7649,
+        "comment": "request size_x"
+    },
+    "89": {
+        "pos": 7649,
+        "comment": "pass to next rule: request cntfor[1][(size_x)-(1)][y][z]"
+    },
+    "90": {
+        "pos": 7649,
+        "comment": "request cntfor[1][(size_x)-(1)][y][z]"
+    },
+    "91": {
+        "pos": 7685,
+        "comment": "body fork: for j = 0 .. (cntfor[1][(size_x)-(1)][y][z])-(1)"
+    },
+    "92": {
+        "pos": 7704,
+        "comment": "migrate: if (size_x)>(1)"
+    },
+    "93": {
+        "pos": 7704,
+        "comment": "request size_x"
+    },
+    "94": {
+        "pos": 7718,
+        "comment": "body fork: if (size_x)>(1)"
+    },
+    "95": {
+        "pos": 7777,
+        "comment": "entry (migrate) cf calccoef_pr_x[j][(size_x)-(1)][y][z]: calccoef_pr_x(((((z)*(size_y))*(size_z))+(((y)+(1))*(size_x)))-(1), cntstep[1][(size_x)-(1)][y][z], j, params[(size_x)-(1)][y][z], a[1][it][(size_x)-(1)][y][z], b[1][it][(size_x)-(1)][y][z], c[1][it][(size_x)-(1)][y][z], f[1][it][(size_x)-(1)][y][z], alfa[1][it][j][(size_x)-(1)][y][z], beta[1][it][j][(size_x)-(1)][y][z], alfa_beta_beg6[1][it][j][(size_x)-(1)][y][z], alfa_beta_beg6[1][it][j][size_x][y][z]);"
+    },
+    "96": {
+        "pos": 7777,
+        "comment": "request_preliminary size_x"
+    },
+    "97": {
+        "pos": 7777,
+        "comment": "migrate"
+    },
+    "98": {
+        "pos": 7777,
+        "comment": "request size_z, size_x, size_y"
+    },
+    "99": {
+        "pos": 7777,
+        "comment": "pass to next rule: request a[1][it][(size_x)-(1)][y][z], cntstep[1][(size_x)-(1)][y][z], c[1][it][(size_x)-(1)][y][z], b[1][it][(size_x)-(1)][y][z], f[1][it][(size_x)-(1)][y][z], alfa_beta_beg6[1][it][j][(size_x)-(1)][y][z], params[(size_x)-(1)][y][z]"
+    },
+    "100": {
+        "pos": 7777,
+        "comment": "request a[1][it][(size_x)-(1)][y][z], cntstep[1][(size_x)-(1)][y][z], c[1][it][(size_x)-(1)][y][z], b[1][it][(size_x)-(1)][y][z], f[1][it][(size_x)-(1)][y][z], alfa_beta_beg6[1][it][j][(size_x)-(1)][y][z], params[(size_x)-(1)][y][z]"
+    },
+    "101": {
+        "pos": 7777,
+        "comment": "execute cf calccoef_pr_x[j][(size_x)-(1)][y][z]: calccoef_pr_x(((((z)*(size_y))*(size_z))+(((y)+(1))*(size_x)))-(1), cntstep[1][(size_x)-(1)][y][z], j, params[(size_x)-(1)][y][z], a[1][it][(size_x)-(1)][y][z], b[1][it][(size_x)-(1)][y][z], c[1][it][(size_x)-(1)][y][z], f[1][it][(size_x)-(1)][y][z], alfa[1][it][j][(size_x)-(1)][y][z], beta[1][it][j][(size_x)-(1)][y][z], alfa_beta_beg6[1][it][j][(size_x)-(1)][y][z], alfa_beta_beg6[1][it][j][size_x][y][z]);"
+    },
+    "102": {
+        "pos": 8369,
+        "comment": "entry (migrate) cf calcVal_x[j][(size_x)-(1)][y][z]: calcVal(((((z)*(size_y))*(size_z))+(((y)+(1))*(size_x)))-(1), 1, cntstep[1][(size_x)-(1)][y][z], params[(size_x)-(1)][y][z], alfa[1][it][j][(size_x)-(1)][y][z], beta[1][it][j][(size_x)-(1)][y][z], u_cur[1][it][j][(size_x)-(1)][y][z], ubeg6[1][it][j][(size_x)-(2)][y][z], ubeg[1][it][(size_x)-(1)][y][z]);"
+    },
+    "103": {
+        "pos": 8369,
+        "comment": "request_preliminary size_x"
+    },
+    "104": {
+        "pos": 8369,
+        "comment": "migrate"
+    },
+    "105": {
+        "pos": 8369,
+        "comment": "request size_x, size_y, size_z"
+    },
+    "106": {
+        "pos": 8369,
+        "comment": "pass to next rule: request alfa[1][it][j][(size_x)-(1)][y][z], beta[1][it][j][(size_x)-(1)][y][z], ubeg[1][it][(size_x)-(1)][y][z], params[(size_x)-(1)][y][z], cntstep[1][(size_x)-(1)][y][z]"
+    },
+    "107": {
+        "pos": 8369,
+        "comment": "request alfa[1][it][j][(size_x)-(1)][y][z], beta[1][it][j][(size_x)-(1)][y][z], ubeg[1][it][(size_x)-(1)][y][z], params[(size_x)-(1)][y][z], cntstep[1][(size_x)-(1)][y][z]"
+    },
+    "108": {
+        "pos": 8369,
+        "comment": "execute cf calcVal_x[j][(size_x)-(1)][y][z]: calcVal(((((z)*(size_y))*(size_z))+(((y)+(1))*(size_x)))-(1), 1, cntstep[1][(size_x)-(1)][y][z], params[(size_x)-(1)][y][z], alfa[1][it][j][(size_x)-(1)][y][z], beta[1][it][j][(size_x)-(1)][y][z], u_cur[1][it][j][(size_x)-(1)][y][z], ubeg6[1][it][j][(size_x)-(2)][y][z], ubeg[1][it][(size_x)-(1)][y][z]);"
+    },
+    "109": {
+        "pos": 8834,
+        "comment": "entry (migrate) for x=0..(size_x)-(1);"
+    },
+    "110": {
+        "pos": 8834,
+        "comment": "request size_x"
+    },
+    "111": {
+        "pos": 8851,
+        "comment": "body fork: for x = 0 .. (size_x)-(1)"
+    },
+    "112": {
+        "pos": 8864,
+        "comment": "entry (migrate) for y=0..(size_y)-(1);"
+    },
+    "113": {
+        "pos": 8864,
+        "comment": "request size_y"
+    },
+    "114": {
+        "pos": 8881,
+        "comment": "body fork: for y = 0 .. (size_y)-(1)"
+    },
+    "115": {
+        "pos": 8897,
+        "comment": "entry (migrate) for z=0..(size_z)-(1);"
+    },
+    "116": {
+        "pos": 8897,
+        "comment": "request size_z"
+    },
+    "117": {
+        "pos": 8914,
+        "comment": "body fork: for z = 0 .. (size_z)-(1)"
+    },
+    "118": {
+        "pos": 8933,
+        "comment": "entry (migrate) cf _l174: reduce_u(cntfor[1][x][y][z], x, y, z, u_cur[1][it], u[1][it][x][y][z]);"
+    },
+    "119": {
+        "pos": 8933,
+        "comment": "request cntfor[1][x][y][z]"
+    },
+    "120": {
+        "pos": 8933,
+        "comment": "execute cf _l174: reduce_u(cntfor[1][x][y][z], x, y, z, u_cur[1][it], u[1][it][x][y][z]);"
+    },
+    "121": {
+        "pos": 1932,
+        "comment": "sub reduce_u"
+    },
+    "122": {
+        "pos": 9084,
+        "comment": "entry (migrate) cf fill_u_x[x][y][z]: fill_u(1, cntstep[1][x][y][z], params[x][y][z], u[1][it][x][y][z], u_c[2][it][x][y][z]);"
+    },
+    "123": {
+        "pos": 9084,
+        "comment": "request params[x][y][z], cntstep[1][x][y][z], u[1][it][x][y][z]"
+    },
+    "124": {
+        "pos": 9084,
+        "comment": "execute cf fill_u_x[x][y][z]: fill_u(1, cntstep[1][x][y][z], params[x][y][z], u[1][it][x][y][z], u_c[2][it][x][y][z]);"
+    },
+    "125": {
+        "pos": 9376,
+        "comment": "entry (migrate) for x=0..(size_x)-(1);"
+    },
+    "126": {
+        "pos": 9376,
+        "comment": "request size_x"
+    },
+    "127": {
+        "pos": 9393,
+        "comment": "body fork: for x = 0 .. (size_x)-(1)"
+    },
+    "128": {
+        "pos": 9406,
+        "comment": "entry (migrate) for z=0..(size_z)-(1);"
+    },
+    "129": {
+        "pos": 9406,
+        "comment": "request size_z"
+    },
+    "130": {
+        "pos": 9423,
+        "comment": "body fork: for z = 0 .. (size_z)-(1)"
+    },
+    "131": {
+        "pos": 9469,
+        "comment": "entry (migrate) cf init_alfa_beta_y[x][0][z]: init_alfa_beta(cntstep[2][x][0][z], alfa_beta_beg[2][it][x][0][z]);"
+    },
+    "132": {
+        "pos": 9469,
+        "comment": "request cntstep[2][x][0][z]"
+    },
+    "133": {
+        "pos": 9469,
+        "comment": "execute cf init_alfa_beta_y[x][0][z]: init_alfa_beta(cntstep[2][x][0][z], alfa_beta_beg[2][it][x][0][z]);"
+    },
+    "134": {
+        "pos": 9590,
+        "comment": "entry (migrate) for y=0..(size_y)-(1);"
+    },
+    "135": {
+        "pos": 9590,
+        "comment": "request size_y"
+    },
+    "136": {
+        "pos": 9607,
+        "comment": "body fork: for y = 0 .. (size_y)-(1)"
+    },
+    "137": {
+        "pos": 9653,
+        "comment": "entry (migrate) cf calcCoef_y[x][y][z]: calcCoef_y(params[x][y][z], u_c[1][it][x][y][z], u_c[2][it][x][y][z], a[2][it][x][y][z], b[2][it][x][y][z], c[2][it][x][y][z], f[2][it][x][y][z]);"
+    },
+    "138": {
+        "pos": 9653,
+        "comment": "request u_c[1][it][x][y][z], params[x][y][z], u_c[2][it][x][y][z]"
+    },
+    "139": {
+        "pos": 9653,
+        "comment": "execute cf calcCoef_y[x][y][z]: calcCoef_y(params[x][y][z], u_c[1][it][x][y][z], u_c[2][it][x][y][z], a[2][it][x][y][z], b[2][it][x][y][z], c[2][it][x][y][z], f[2][it][x][y][z]);"
+    },
+    "140": {
+        "pos": 9897,
+        "comment": "entry (migrate) cf init_uend_y[x][(size_y)-(1)][z]: init_uend(cntstep[2][x][(size_y)-(1)][z], ubeg[2][it][x][(size_y)-(1)][z]);"
+    },
+    "141": {
+        "pos": 9897,
+        "comment": "request_preliminary size_y"
+    },
+    "142": {
+        "pos": 9897,
+        "comment": "migrate"
+    },
+    "143": {
+        "pos": 9897,
+        "comment": "request size_y"
+    },
+    "144": {
+        "pos": 9897,
+        "comment": "pass to next rule: request cntstep[2][x][(size_y)-(1)][z]"
+    },
+    "145": {
+        "pos": 9897,
+        "comment": "request cntstep[2][x][(size_y)-(1)][z]"
+    },
+    "146": {
+        "pos": 9897,
+        "comment": "execute cf init_uend_y[x][(size_y)-(1)][z]: init_uend(cntstep[2][x][(size_y)-(1)][z], ubeg[2][it][x][(size_y)-(1)][z]);"
+    },
+    "147": {
+        "pos": 10056,
+        "comment": "entry (migrate) for x=0..(size_x)-(1);"
+    },
+    "148": {
+        "pos": 10056,
+        "comment": "request size_x"
+    },
+    "149": {
+        "pos": 10073,
+        "comment": "body fork: for x = 0 .. (size_x)-(1)"
+    },
+    "150": {
+        "pos": 10086,
+        "comment": "entry (migrate) for z=0..(size_z)-(1);"
+    },
+    "151": {
+        "pos": 10086,
+        "comment": "request size_z"
+    },
+    "152": {
+        "pos": 10103,
+        "comment": "body fork: for z = 0 .. (size_z)-(1)"
+    },
+    "153": {
+        "pos": 10119,
+        "comment": "entry (migrate) for k=0..(cntfor[2][x][0][z])-(1);"
+    },
+    "154": {
+        "pos": 10119,
+        "comment": "request cntfor[2][x][0][z]"
+    },
+    "155": {
+        "pos": 10148,
+        "comment": "body fork: for k = 0 .. (cntfor[2][x][0][z])-(1)"
+    },
+    "156": {
+        "pos": 10197,
+        "comment": "entry (migrate) cf calccoef_pr_y[k][x][0][z]: calccoef_pr_y(cntstep[2][x][0][z], k, params[x][0][z], a[2][it][x][0][z], b[2][it][x][0][z], c[2][it][x][0][z], f[2][it][x][0][z], alfa[2][it][k][x][0][z], beta[2][it][k][x][0][z], alfa_beta_beg[2][it][x][0][z], alfa_beta_beg6[2][it][k][x][1][z]);"
+    },
+    "157": {
+        "pos": 10197,
+        "comment": "request b[2][it][x][0][z], cntstep[2][x][0][z], f[2][it][x][0][z], a[2][it][x][0][z], c[2][it][x][0][z], params[x][0][z], alfa_beta_beg[2][it][x][0][z]"
+    },
+    "158": {
+        "pos": 10197,
+        "comment": "execute cf calccoef_pr_y[k][x][0][z]: calccoef_pr_y(cntstep[2][x][0][z], k, params[x][0][z], a[2][it][x][0][z], b[2][it][x][0][z], c[2][it][x][0][z], f[2][it][x][0][z], alfa[2][it][k][x][0][z], beta[2][it][k][x][0][z], alfa_beta_beg[2][it][x][0][z], alfa_beta_beg6[2][it][k][x][1][z]);"
+    },
+    "159": {
+        "pos": 10542,
+        "comment": "migrate: if (size_y)>(1)"
+    },
+    "160": {
+        "pos": 10542,
+        "comment": "request size_y"
+    },
+    "161": {
+        "pos": 10556,
+        "comment": "body fork: if (size_y)>(1)"
+    },
+    "162": {
+        "pos": 10604,
+        "comment": "entry (migrate) cf calcVal_y[k][x][0][z]: calcVal((((z)*(size_y))*(size_z))+(x), 2, cntstep[2][x][0][z], params[x][0][z], alfa[2][it][k][x][0][z], beta[2][it][k][x][0][z], u_cur[2][it][k][x][0][z], ubeg6[2][it][k][x][(0)-(1)][z], ubeg6[2][it][k][x][0][z]);"
+    },
+    "163": {
+        "pos": 10604,
+        "comment": "request cntstep[2][x][0][z], beta[2][it][k][x][0][z], size_z, params[x][0][z], alfa[2][it][k][x][0][z], ubeg6[2][it][k][x][0][z], size_y"
+    },
+    "164": {
+        "pos": 10604,
+        "comment": "execute cf calcVal_y[k][x][0][z]: calcVal((((z)*(size_y))*(size_z))+(x), 2, cntstep[2][x][0][z], params[x][0][z], alfa[2][it][k][x][0][z], beta[2][it][k][x][0][z], u_cur[2][it][k][x][0][z], ubeg6[2][it][k][x][(0)-(1)][z], ubeg6[2][it][k][x][0][z]);"
+    },
+    "165": {
+        "pos": 11033,
+        "comment": "entry (migrate) for y=1..(size_y)-(2);"
+    },
+    "166": {
+        "pos": 11033,
+        "comment": "request size_y"
+    },
+    "167": {
+        "pos": 11050,
+        "comment": "body fork: for y = 1 .. (size_y)-(2)"
+    },
+    "168": {
+        "pos": 11069,
+        "comment": "entry (migrate) for k=0..(cntfor[2][x][y][z])-(1);"
+    },
+    "169": {
+        "pos": 11069,
+        "comment": "request cntfor[2][x][y][z]"
+    },
+    "170": {
+        "pos": 11098,
+        "comment": "body fork: for k = 0 .. (cntfor[2][x][y][z])-(1)"
+    },
+    "171": {
+        "pos": 11150,
+        "comment": "entry (migrate) cf calccoef_pr_y[k][x][y][z]: calccoef_pr_y(cntstep[2][x][y][z], k, params[x][y][z], a[2][it][x][y][z], b[2][it][x][y][z], c[2][it][x][y][z], f[2][it][x][y][z], alfa[2][it][k][x][y][z], beta[2][it][k][x][y][z], alfa_beta_beg6[2][it][k][x][y][z], alfa_beta_beg6[2][it][k][x][(y)+(1)][z]);"
+    },
+    "172": {
+        "pos": 11150,
+        "comment": "request b[2][it][x][y][z], alfa_beta_beg6[2][it][k][x][y][z], f[2][it][x][y][z], cntstep[2][x][y][z], params[x][y][z], a[2][it][x][y][z], c[2][it][x][y][z]"
+    },
+    "173": {
+        "pos": 11150,
+        "comment": "execute cf calccoef_pr_y[k][x][y][z]: calccoef_pr_y(cntstep[2][x][y][z], k, params[x][y][z], a[2][it][x][y][z], b[2][it][x][y][z], c[2][it][x][y][z], f[2][it][x][y][z], alfa[2][it][k][x][y][z], beta[2][it][k][x][y][z], alfa_beta_beg6[2][it][k][x][y][z], alfa_beta_beg6[2][it][k][x][(y)+(1)][z]);"
+    },
+    "174": {
+        "pos": 11570,
+        "comment": "entry (migrate) cf calcVal_y[k][x][y][z]: calcVal(((((z)*(size_y))*(size_z))+((y)*(size_x)))+(x), 2, cntstep[2][x][y][z], params[x][y][z], alfa[2][it][k][x][y][z], beta[2][it][k][x][y][z], u_cur[2][it][k][x][y][z], ubeg6[2][it][k][x][(y)-(1)][z], ubeg6[2][it][k][x][y][z]);"
+    },
+    "175": {
+        "pos": 11570,
+        "comment": "request params[x][y][z], alfa[2][it][k][x][y][z], size_y, size_z, size_x, ubeg6[2][it][k][x][y][z], beta[2][it][k][x][y][z], cntstep[2][x][y][z]"
+    },
+    "176": {
+        "pos": 11570,
+        "comment": "execute cf calcVal_y[k][x][y][z]: calcVal(((((z)*(size_y))*(size_z))+((y)*(size_x)))+(x), 2, cntstep[2][x][y][z], params[x][y][z], alfa[2][it][k][x][y][z], beta[2][it][k][x][y][z], u_cur[2][it][k][x][y][z], ubeg6[2][it][k][x][(y)-(1)][z], ubeg6[2][it][k][x][y][z]);"
+    },
+    "177": {
+        "pos": 11982,
+        "comment": "entry (migrate) for k=0..(cntfor[2][x][(size_y)-(1)][z])-(1);"
+    },
+    "178": {
+        "pos": 11982,
+        "comment": "request size_y"
+    },
+    "179": {
+        "pos": 11982,
+        "comment": "pass to next rule: request cntfor[2][x][(size_y)-(1)][z]"
+    },
+    "180": {
+        "pos": 11982,
+        "comment": "request cntfor[2][x][(size_y)-(1)][z]"
+    },
+    "181": {
+        "pos": 12018,
+        "comment": "body fork: for k = 0 .. (cntfor[2][x][(size_y)-(1)][z])-(1)"
+    },
+    "182": {
+        "pos": 12036,
+        "comment": "migrate: if (size_y)>(1)"
+    },
+    "183": {
+        "pos": 12036,
+        "comment": "request size_y"
+    },
+    "184": {
+        "pos": 12050,
+        "comment": "body fork: if (size_y)>(1)"
+    },
+    "185": {
+        "pos": 12109,
+        "comment": "entry (migrate) cf calccoef_pr_y[k][x][(size_y)-(1)][z]: calccoef_pr_y(cntstep[2][x][(size_y)-(1)][z], k, params[x][(size_y)-(1)][z], a[2][it][x][(size_y)-(1)][z], b[2][it][x][(size_y)-(1)][z], c[2][it][x][(size_y)-(1)][z], f[2][it][x][(size_y)-(1)][z], alfa[2][it][k][x][(size_y)-(1)][z], beta[2][it][k][x][(size_y)-(1)][z], alfa_beta_beg6[2][it][k][x][(size_y)-(1)][z], alfa_beta_beg6[2][it][k][x][size_y][z]);"
+    },
+    "186": {
+        "pos": 12109,
+        "comment": "request_preliminary size_y"
+    },
+    "187": {
+        "pos": 12109,
+        "comment": "migrate"
+    },
+    "188": {
+        "pos": 12109,
+        "comment": "request size_y"
+    },
+    "189": {
+        "pos": 12109,
+        "comment": "pass to next rule: request cntstep[2][x][(size_y)-(1)][z], params[x][(size_y)-(1)][z], alfa_beta_beg6[2][it][k][x][(size_y)-(1)][z], a[2][it][x][(size_y)-(1)][z], c[2][it][x][(size_y)-(1)][z], b[2][it][x][(size_y)-(1)][z], f[2][it][x][(size_y)-(1)][z]"
+    },
+    "190": {
+        "pos": 12109,
+        "comment": "request cntstep[2][x][(size_y)-(1)][z], params[x][(size_y)-(1)][z], alfa_beta_beg6[2][it][k][x][(size_y)-(1)][z], a[2][it][x][(size_y)-(1)][z], c[2][it][x][(size_y)-(1)][z], b[2][it][x][(size_y)-(1)][z], f[2][it][x][(size_y)-(1)][z]"
+    },
+    "191": {
+        "pos": 12109,
+        "comment": "execute cf calccoef_pr_y[k][x][(size_y)-(1)][z]: calccoef_pr_y(cntstep[2][x][(size_y)-(1)][z], k, params[x][(size_y)-(1)][z], a[2][it][x][(size_y)-(1)][z], b[2][it][x][(size_y)-(1)][z], c[2][it][x][(size_y)-(1)][z], f[2][it][x][(size_y)-(1)][z], alfa[2][it][k][x][(size_y)-(1)][z], beta[2][it][k][x][(size_y)-(1)][z], alfa_beta_beg6[2][it][k][x][(size_y)-(1)][z], alfa_beta_beg6[2][it][k][x][size_y][z]);"
+    },
+    "192": {
+        "pos": 12732,
+        "comment": "entry (migrate) cf calcVal_y[k][x][(size_y)-(1)][z]: calcVal(((((z)*(size_y))*(size_z))+(((size_y)-(1))*(size_x)))+(x), 2, cntstep[2][x][(size_y)-(1)][z], params[x][(size_y)-(1)][z], alfa[2][it][k][x][(size_y)-(1)][z], beta[2][it][k][x][(size_y)-(1)][z], u_cur[2][it][k][x][(size_y)-(1)][z], ubeg6[2][it][k][x][(size_y)-(2)][z], ubeg[2][it][x][(size_y)-(1)][z]);"
+    },
+    "193": {
+        "pos": 12732,
+        "comment": "request_preliminary size_y"
+    },
+    "194": {
+        "pos": 12732,
+        "comment": "migrate"
+    },
+    "195": {
+        "pos": 12732,
+        "comment": "request size_y, size_x, size_z"
+    },
+    "196": {
+        "pos": 12732,
+        "comment": "pass to next rule: request alfa[2][it][k][x][(size_y)-(1)][z], params[x][(size_y)-(1)][z], beta[2][it][k][x][(size_y)-(1)][z], ubeg[2][it][x][(size_y)-(1)][z], cntstep[2][x][(size_y)-(1)][z]"
+    },
+    "197": {
+        "pos": 12732,
+        "comment": "request alfa[2][it][k][x][(size_y)-(1)][z], params[x][(size_y)-(1)][z], beta[2][it][k][x][(size_y)-(1)][z], ubeg[2][it][x][(size_y)-(1)][z], cntstep[2][x][(size_y)-(1)][z]"
+    },
+    "198": {
+        "pos": 12732,
+        "comment": "execute cf calcVal_y[k][x][(size_y)-(1)][z]: calcVal(((((z)*(size_y))*(size_z))+(((size_y)-(1))*(size_x)))+(x), 2, cntstep[2][x][(size_y)-(1)][z], params[x][(size_y)-(1)][z], alfa[2][it][k][x][(size_y)-(1)][z], beta[2][it][k][x][(size_y)-(1)][z], u_cur[2][it][k][x][(size_y)-(1)][z], ubeg6[2][it][k][x][(size_y)-(2)][z], ubeg[2][it][x][(size_y)-(1)][z]);"
+    },
+    "199": {
+        "pos": 13198,
+        "comment": "entry (migrate) for x=0..(size_x)-(1);"
+    },
+    "200": {
+        "pos": 13198,
+        "comment": "request size_x"
+    },
+    "201": {
+        "pos": 13215,
+        "comment": "body fork: for x = 0 .. (size_x)-(1)"
+    },
+    "202": {
+        "pos": 13228,
+        "comment": "entry (migrate) for y=0..(size_y)-(1);"
+    },
+    "203": {
+        "pos": 13228,
+        "comment": "request size_y"
+    },
+    "204": {
+        "pos": 13245,
+        "comment": "body fork: for y = 0 .. (size_y)-(1)"
+    },
+    "205": {
+        "pos": 13261,
+        "comment": "entry (migrate) for z=0..(size_z)-(1);"
+    },
+    "206": {
+        "pos": 13261,
+        "comment": "request size_z"
+    },
+    "207": {
+        "pos": 13278,
+        "comment": "body fork: for z = 0 .. (size_z)-(1)"
+    },
+    "208": {
+        "pos": 13297,
+        "comment": "entry (migrate) cf _l251: reduce_u(cntfor[2][x][y][z], x, y, z, u_cur[2][it], u[2][it][x][y][z]);"
+    },
+    "209": {
+        "pos": 13297,
+        "comment": "request cntfor[2][x][y][z]"
+    },
+    "210": {
+        "pos": 13297,
+        "comment": "execute cf _l251: reduce_u(cntfor[2][x][y][z], x, y, z, u_cur[2][it], u[2][it][x][y][z]);"
+    },
+    "211": {
+        "pos": 13433,
+        "comment": "entry (migrate) cf fill_u_x[x][y][z]: fill_u(2, cntstep[2][x][y][z], params[x][y][z], u[2][it][x][y][z], u_c[3][it][x][y][z]);"
+    },
+    "212": {
+        "pos": 13433,
+        "comment": "request cntstep[2][x][y][z], u[2][it][x][y][z], params[x][y][z]"
+    },
+    "213": {
+        "pos": 13433,
+        "comment": "execute cf fill_u_x[x][y][z]: fill_u(2, cntstep[2][x][y][z], params[x][y][z], u[2][it][x][y][z], u_c[3][it][x][y][z]);"
+    },
+    "214": {
+        "pos": 13724,
+        "comment": "entry (migrate) for x=0..(size_x)-(1);"
+    },
+    "215": {
+        "pos": 13724,
+        "comment": "request size_x"
+    },
+    "216": {
+        "pos": 13741,
+        "comment": "body fork: for x = 0 .. (size_x)-(1)"
+    },
+    "217": {
+        "pos": 13754,
+        "comment": "entry (migrate) for y=0..(size_y)-(1);"
+    },
+    "218": {
+        "pos": 13754,
+        "comment": "request size_y"
+    },
+    "219": {
+        "pos": 13771,
+        "comment": "body fork: for y = 0 .. (size_y)-(1)"
+    },
+    "220": {
+        "pos": 13816,
+        "comment": "entry (migrate) cf init_alfa_beta_z[x][y][0]: init_alfa_beta(cntstep[3][x][y][0], alfa_beta_beg[3][it][x][y][0]);"
+    },
+    "221": {
+        "pos": 13816,
+        "comment": "request cntstep[3][x][y][0]"
+    },
+    "222": {
+        "pos": 13816,
+        "comment": "execute cf init_alfa_beta_z[x][y][0]: init_alfa_beta(cntstep[3][x][y][0], alfa_beta_beg[3][it][x][y][0]);"
+    },
+    "223": {
+        "pos": 13937,
+        "comment": "entry (migrate) for z=0..(size_z)-(1);"
+    },
+    "224": {
+        "pos": 13937,
+        "comment": "request size_z"
+    },
+    "225": {
+        "pos": 13954,
+        "comment": "body fork: for z = 0 .. (size_z)-(1)"
+    },
+    "226": {
+        "pos": 14000,
+        "comment": "entry (migrate) cf calcCoef_z[x][y][z]: calcCoef_z(params[x][y][z], u_c[1][it][x][y][z], u_c[3][it][x][y][z], a[3][it][x][y][z], b[3][it][x][y][z], c[3][it][x][y][z], f[3][it][x][y][z]);"
+    },
+    "227": {
+        "pos": 14000,
+        "comment": "request u_c[1][it][x][y][z], u_c[3][it][x][y][z], params[x][y][z]"
+    },
+    "228": {
+        "pos": 14000,
+        "comment": "execute cf calcCoef_z[x][y][z]: calcCoef_z(params[x][y][z], u_c[1][it][x][y][z], u_c[3][it][x][y][z], a[3][it][x][y][z], b[3][it][x][y][z], c[3][it][x][y][z], f[3][it][x][y][z]);"
+    },
+    "229": {
+        "pos": 14244,
+        "comment": "entry (migrate) cf init_uend_z[x][y][(size_z)-(1)]: init_uend(cntstep[3][x][y][(size_z)-(1)], ubeg[3][it][x][y][(size_z)-(1)]);"
+    },
+    "230": {
+        "pos": 14244,
+        "comment": "request_preliminary size_z"
+    },
+    "231": {
+        "pos": 14244,
+        "comment": "migrate"
+    },
+    "232": {
+        "pos": 14244,
+        "comment": "request size_z"
+    },
+    "233": {
+        "pos": 14244,
+        "comment": "pass to next rule: request cntstep[3][x][y][(size_z)-(1)]"
+    },
+    "234": {
+        "pos": 14244,
+        "comment": "request cntstep[3][x][y][(size_z)-(1)]"
+    },
+    "235": {
+        "pos": 14244,
+        "comment": "execute cf init_uend_z[x][y][(size_z)-(1)]: init_uend(cntstep[3][x][y][(size_z)-(1)], ubeg[3][it][x][y][(size_z)-(1)]);"
+    },
+    "236": {
+        "pos": 14401,
+        "comment": "entry (migrate) for x=0..(size_x)-(1);"
+    },
+    "237": {
+        "pos": 14401,
+        "comment": "request size_x"
+    },
+    "238": {
+        "pos": 14418,
+        "comment": "body fork: for x = 0 .. (size_x)-(1)"
+    },
+    "239": {
+        "pos": 14431,
+        "comment": "entry (migrate) for y=0..(size_y)-(1);"
+    },
+    "240": {
+        "pos": 14431,
+        "comment": "request size_y"
+    },
+    "241": {
+        "pos": 14448,
+        "comment": "body fork: for y = 0 .. (size_y)-(1)"
+    },
+    "242": {
+        "pos": 14464,
+        "comment": "entry (migrate) for i=0..(cntfor[3][x][y][0])-(1);"
+    },
+    "243": {
+        "pos": 14464,
+        "comment": "request cntfor[3][x][y][0]"
+    },
+    "244": {
+        "pos": 14493,
+        "comment": "body fork: for i = 0 .. (cntfor[3][x][y][0])-(1)"
+    },
+    "245": {
+        "pos": 14542,
+        "comment": "entry (migrate) cf calccoef_pr_z[i][x][y][0]: calccoef_pr_z(cntstep[3][x][y][0], i, params[x][y][0], a[3][it][x][y][0], b[3][it][x][y][0], c[3][it][x][y][0], f[3][it][x][y][0], alfa[3][it][i][x][y][0], beta[3][it][i][x][y][0], alfa_beta_beg[3][it][x][y][0], alfa_beta_beg6[3][it][i][x][y][1]);"
+    },
+    "246": {
+        "pos": 14542,
+        "comment": "request alfa_beta_beg[3][it][x][y][0], cntstep[3][x][y][0], a[3][it][x][y][0], params[x][y][0], c[3][it][x][y][0], f[3][it][x][y][0], b[3][it][x][y][0]"
+    },
+    "247": {
+        "pos": 14542,
+        "comment": "execute cf calccoef_pr_z[i][x][y][0]: calccoef_pr_z(cntstep[3][x][y][0], i, params[x][y][0], a[3][it][x][y][0], b[3][it][x][y][0], c[3][it][x][y][0], f[3][it][x][y][0], alfa[3][it][i][x][y][0], beta[3][it][i][x][y][0], alfa_beta_beg[3][it][x][y][0], alfa_beta_beg6[3][it][i][x][y][1]);"
+    },
+    "248": {
+        "pos": 14887,
+        "comment": "migrate: if (size_z)>(1)"
+    },
+    "249": {
+        "pos": 14887,
+        "comment": "request size_z"
+    },
+    "250": {
+        "pos": 14901,
+        "comment": "body fork: if (size_z)>(1)"
+    },
+    "251": {
+        "pos": 14949,
+        "comment": "entry (migrate) cf calcVal_z[i][x][y][0]: calcVal(((y)*(size_x))+(x), 3, cntstep[3][x][y][0], params[x][y][0], alfa[3][it][i][x][y][0], beta[3][it][i][x][y][0], u_cur[3][it][i][x][y][0], ubeg6[3][it][i][x][y][(0)-(1)], ubeg6[3][it][i][x][y][0]);"
+    },
+    "252": {
+        "pos": 14949,
+        "comment": "request cntstep[3][x][y][0], size_x, alfa[3][it][i][x][y][0], beta[3][it][i][x][y][0], ubeg6[3][it][i][x][y][0], params[x][y][0]"
+    },
+    "253": {
+        "pos": 14949,
+        "comment": "execute cf calcVal_z[i][x][y][0]: calcVal(((y)*(size_x))+(x), 3, cntstep[3][x][y][0], params[x][y][0], alfa[3][it][i][x][y][0], beta[3][it][i][x][y][0], u_cur[3][it][i][x][y][0], ubeg6[3][it][i][x][y][(0)-(1)], ubeg6[3][it][i][x][y][0]);"
+    },
+    "254": {
+        "pos": 15371,
+        "comment": "entry (migrate) for z=1..(size_z)-(2);"
+    },
+    "255": {
+        "pos": 15371,
+        "comment": "request size_z"
+    },
+    "256": {
+        "pos": 15388,
+        "comment": "body fork: for z = 1 .. (size_z)-(2)"
+    },
+    "257": {
+        "pos": 15407,
+        "comment": "entry (migrate) for i=0..(cntfor[3][x][y][z])-(1);"
+    },
+    "258": {
+        "pos": 15407,
+        "comment": "request cntfor[3][x][y][z]"
+    },
+    "259": {
+        "pos": 15436,
+        "comment": "body fork: for i = 0 .. (cntfor[3][x][y][z])-(1)"
+    },
+    "260": {
+        "pos": 15487,
+        "comment": "entry (migrate) cf calccoef_pr_z[i][x][y][z]: calccoef_pr_z(cntstep[3][x][y][z], i, params[x][y][z], a[3][it][x][y][z], b[3][it][x][y][z], c[3][it][x][y][z], f[3][it][x][y][z], alfa[3][it][i][x][y][z], beta[3][it][i][x][y][z], alfa_beta_beg6[3][it][i][x][y][z], alfa_beta_beg6[3][it][i][x][y][(z)+(1)]);"
+    },
+    "261": {
+        "pos": 15487,
+        "comment": "request alfa_beta_beg6[3][it][i][x][y][z], f[3][it][x][y][z], c[3][it][x][y][z], cntstep[3][x][y][z], params[x][y][z], a[3][it][x][y][z], b[3][it][x][y][z]"
+    },
+    "262": {
+        "pos": 15487,
+        "comment": "execute cf calccoef_pr_z[i][x][y][z]: calccoef_pr_z(cntstep[3][x][y][z], i, params[x][y][z], a[3][it][x][y][z], b[3][it][x][y][z], c[3][it][x][y][z], f[3][it][x][y][z], alfa[3][it][i][x][y][z], beta[3][it][i][x][y][z], alfa_beta_beg6[3][it][i][x][y][z], alfa_beta_beg6[3][it][i][x][y][(z)+(1)]);"
+    },
+    "263": {
+        "pos": 15907,
+        "comment": "entry (migrate) cf calcVal_z[i][x][y][z]: calcVal(((((z)*(size_y))*(size_z))+((y)*(size_x)))+(x), 3, cntstep[3][x][y][z], params[x][y][z], alfa[3][it][i][x][y][z], beta[3][it][i][x][y][z], u_cur[3][it][i][x][y][z], ubeg6[3][it][i][x][y][(z)-(1)], ubeg6[3][it][i][x][y][z]);"
+    },
+    "264": {
+        "pos": 15907,
+        "comment": "request ubeg6[3][it][i][x][y][z], cntstep[3][x][y][z], alfa[3][it][i][x][y][z], size_z, size_y, params[x][y][z], beta[3][it][i][x][y][z], size_x"
+    },
+    "265": {
+        "pos": 15907,
+        "comment": "execute cf calcVal_z[i][x][y][z]: calcVal(((((z)*(size_y))*(size_z))+((y)*(size_x)))+(x), 3, cntstep[3][x][y][z], params[x][y][z], alfa[3][it][i][x][y][z], beta[3][it][i][x][y][z], u_cur[3][it][i][x][y][z], ubeg6[3][it][i][x][y][(z)-(1)], ubeg6[3][it][i][x][y][z]);"
+    },
+    "266": {
+        "pos": 16321,
+        "comment": "entry (migrate) for i=0..(cntfor[3][x][y][(size_z)-(1)])-(1);"
+    },
+    "267": {
+        "pos": 16321,
+        "comment": "request size_z"
+    },
+    "268": {
+        "pos": 16321,
+        "comment": "pass to next rule: request cntfor[3][x][y][(size_z)-(1)]"
+    },
+    "269": {
+        "pos": 16321,
+        "comment": "request cntfor[3][x][y][(size_z)-(1)]"
+    },
+    "270": {
+        "pos": 16357,
+        "comment": "body fork: for i = 0 .. (cntfor[3][x][y][(size_z)-(1)])-(1)"
+    },
+    "271": {
+        "pos": 16376,
+        "comment": "migrate: if (size_z)>(1)"
+    },
+    "272": {
+        "pos": 16376,
+        "comment": "request size_z"
+    },
+    "273": {
+        "pos": 16390,
+        "comment": "body fork: if (size_z)>(1)"
+    },
+    "274": {
+        "pos": 16448,
+        "comment": "entry (migrate) cf calccoef_pr_z[i][x][y][(size_z)-(1)]: calccoef_pr_z(cntstep[3][x][y][(size_z)-(1)], i, params[x][y][(size_z)-(1)], a[3][it][x][y][(size_z)-(1)], b[3][it][x][y][(size_z)-(1)], c[3][it][x][y][(size_z)-(1)], f[3][it][x][y][(size_z)-(1)], alfa[3][it][i][x][y][(size_z)-(1)], beta[3][it][i][x][y][(size_z)-(1)], alfa_beta_beg6[3][it][i][x][y][(size_z)-(1)], alfa_beta_beg6[3][it][i][x][y][size_z]);"
+    },
+    "275": {
+        "pos": 16448,
+        "comment": "request_preliminary size_z"
+    },
+    "276": {
+        "pos": 16448,
+        "comment": "migrate"
+    },
+    "277": {
+        "pos": 16448,
+        "comment": "request size_z"
+    },
+    "278": {
+        "pos": 16448,
+        "comment": "pass to next rule: request b[3][it][x][y][(size_z)-(1)], cntstep[3][x][y][(size_z)-(1)], f[3][it][x][y][(size_z)-(1)], alfa_beta_beg6[3][it][i][x][y][(size_z)-(1)], params[x][y][(size_z)-(1)], a[3][it][x][y][(size_z)-(1)], c[3][it][x][y][(size_z)-(1)]"
+    },
+    "279": {
+        "pos": 16448,
+        "comment": "request b[3][it][x][y][(size_z)-(1)], cntstep[3][x][y][(size_z)-(1)], f[3][it][x][y][(size_z)-(1)], alfa_beta_beg6[3][it][i][x][y][(size_z)-(1)], params[x][y][(size_z)-(1)], a[3][it][x][y][(size_z)-(1)], c[3][it][x][y][(size_z)-(1)]"
+    },
+    "280": {
+        "pos": 16448,
+        "comment": "execute cf calccoef_pr_z[i][x][y][(size_z)-(1)]: calccoef_pr_z(cntstep[3][x][y][(size_z)-(1)], i, params[x][y][(size_z)-(1)], a[3][it][x][y][(size_z)-(1)], b[3][it][x][y][(size_z)-(1)], c[3][it][x][y][(size_z)-(1)], f[3][it][x][y][(size_z)-(1)], alfa[3][it][i][x][y][(size_z)-(1)], beta[3][it][i][x][y][(size_z)-(1)], alfa_beta_beg6[3][it][i][x][y][(size_z)-(1)], alfa_beta_beg6[3][it][i][x][y][size_z]);"
+    },
+    "281": {
+        "pos": 17013,
+        "comment": "entry (migrate) cf calcVal_z[i][x][y][(size_z)-(1)]: calcVal((((((size_z)-(1))*(size_y))*(size_z))+((y)*(size_x)))+(x), 3, cntstep[3][x][y][(size_z)-(1)], params[x][y][(size_z)-(1)], alfa[3][it][i][x][y][(size_z)-(1)], beta[3][it][i][x][y][(size_z)-(1)], u_cur[3][it][i][x][y][(size_z)-(1)], ubeg6[3][it][i][x][y][(size_z)-(2)], ubeg[3][it][x][y][(size_z)-(1)]);"
+    },
+    "282": {
+        "pos": 17013,
+        "comment": "request_preliminary size_z"
+    },
+    "283": {
+        "pos": 17013,
+        "comment": "migrate"
+    },
+    "284": {
+        "pos": 17013,
+        "comment": "request size_z, size_y, size_x"
+    },
+    "285": {
+        "pos": 17013,
+        "comment": "pass to next rule: request ubeg[3][it][x][y][(size_z)-(1)], params[x][y][(size_z)-(1)], cntstep[3][x][y][(size_z)-(1)], beta[3][it][i][x][y][(size_z)-(1)], alfa[3][it][i][x][y][(size_z)-(1)]"
+    },
+    "286": {
+        "pos": 17013,
+        "comment": "request ubeg[3][it][x][y][(size_z)-(1)], params[x][y][(size_z)-(1)], cntstep[3][x][y][(size_z)-(1)], beta[3][it][i][x][y][(size_z)-(1)], alfa[3][it][i][x][y][(size_z)-(1)]"
+    },
+    "287": {
+        "pos": 17013,
+        "comment": "execute cf calcVal_z[i][x][y][(size_z)-(1)]: calcVal((((((size_z)-(1))*(size_y))*(size_z))+((y)*(size_x)))+(x), 3, cntstep[3][x][y][(size_z)-(1)], params[x][y][(size_z)-(1)], alfa[3][it][i][x][y][(size_z)-(1)], beta[3][it][i][x][y][(size_z)-(1)], u_cur[3][it][i][x][y][(size_z)-(1)], ubeg6[3][it][i][x][y][(size_z)-(2)], ubeg[3][it][x][y][(size_z)-(1)]);"
+    },
+    "288": {
+        "pos": 17479,
+        "comment": "entry (migrate) for x=0..(size_x)-(1);"
+    },
+    "289": {
+        "pos": 17479,
+        "comment": "request size_x"
+    },
+    "290": {
+        "pos": 17496,
+        "comment": "body fork: for x = 0 .. (size_x)-(1)"
+    },
+    "291": {
+        "pos": 17509,
+        "comment": "entry (migrate) for y=0..(size_y)-(1);"
+    },
+    "292": {
+        "pos": 17509,
+        "comment": "request size_y"
+    },
+    "293": {
+        "pos": 17526,
+        "comment": "body fork: for y = 0 .. (size_y)-(1)"
+    },
+    "294": {
+        "pos": 17542,
+        "comment": "entry (migrate) for z=0..(size_z)-(1);"
+    },
+    "295": {
+        "pos": 17542,
+        "comment": "request size_z"
+    },
+    "296": {
+        "pos": 17559,
+        "comment": "body fork: for z = 0 .. (size_z)-(1)"
+    },
+    "297": {
+        "pos": 17578,
+        "comment": "entry (migrate) cf _l324: reduce_u(cntfor[3][x][y][z], x, y, z, u_cur[3][it], u[3][it][x][y][z]);"
+    },
+    "298": {
+        "pos": 17578,
+        "comment": "request cntfor[3][x][y][z]"
+    },
+    "299": {
+        "pos": 17578,
+        "comment": "execute cf _l324: reduce_u(cntfor[3][x][y][z], x, y, z, u_cur[3][it], u[3][it][x][y][z]);"
+    },
+    "300": {
+        "pos": 17729,
+        "comment": "entry (migrate) cf fill_u_z[x][y][z]: fill_u(3, cntstep[3][x][y][z], params[x][y][z], u[3][it][x][y][z], u_c[4][it][x][y][z]);"
+    },
+    "301": {
+        "pos": 17729,
+        "comment": "request cntstep[3][x][y][z], params[x][y][z], u[3][it][x][y][z]"
+    },
+    "302": {
+        "pos": 17729,
+        "comment": "execute cf fill_u_z[x][y][z]: fill_u(3, cntstep[3][x][y][z], params[x][y][z], u[3][it][x][y][z], u_c[4][it][x][y][z]);"
+    },
+    "303": {
+        "pos": 18012,
+        "comment": "entry (migrate) for x=0..(size_x)-(1);"
+    },
+    "304": {
+        "pos": 18012,
+        "comment": "request size_x"
+    },
+    "305": {
+        "pos": 18029,
+        "comment": "body fork: for x = 0 .. (size_x)-(1)"
+    },
+    "306": {
+        "pos": 18042,
+        "comment": "entry (migrate) for y=0..(size_y)-(1);"
+    },
+    "307": {
+        "pos": 18042,
+        "comment": "request size_y"
+    },
+    "308": {
+        "pos": 18059,
+        "comment": "body fork: for y = 0 .. (size_y)-(1)"
+    },
+    "309": {
+        "pos": 18075,
+        "comment": "entry (migrate) for z=0..(size_z)-(1);"
+    },
+    "310": {
+        "pos": 18075,
+        "comment": "request size_z"
+    },
+    "311": {
+        "pos": 18092,
+        "comment": "body fork: for z = 0 .. (size_z)-(1)"
+    },
+    "312": {
+        "pos": 18137,
+        "comment": "entry (migrate) cf setBorder_x[x][y][z]: setBorder_x(params[x][y][z], u_c[4][it][x][y][z], sendar_x_L[(x)-(1)][y][z], sendar_x_R[(x)+(1)][y][z]);"
+    },
+    "313": {
+        "pos": 18137,
+        "comment": "request u_c[4][it][x][y][z], params[x][y][z]"
+    },
+    "314": {
+        "pos": 18137,
+        "comment": "execute cf setBorder_x[x][y][z]: setBorder_x(params[x][y][z], u_c[4][it][x][y][z], sendar_x_L[(x)-(1)][y][z], sendar_x_R[(x)+(1)][y][z]);"
+    },
+    "315": {
+        "pos": 18314,
+        "comment": "entry (migrate) cf setBorder_y[x][y][z]: setBorder_y(params[x][y][z], u_c[4][it][x][y][z], sendar_y_T[x][(y)+(1)][z], sendar_y_B[x][(y)-(1)][z]);"
+    },
+    "316": {
+        "pos": 18314,
+        "comment": "request params[x][y][z], u_c[4][it][x][y][z]"
+    },
+    "317": {
+        "pos": 18314,
+        "comment": "execute cf setBorder_y[x][y][z]: setBorder_y(params[x][y][z], u_c[4][it][x][y][z], sendar_y_T[x][(y)+(1)][z], sendar_y_B[x][(y)-(1)][z]);"
+    },
+    "318": {
+        "pos": 18491,
+        "comment": "entry (migrate) cf setBorder_z[x][y][z]: setBorder_z(params[x][y][z], u_c[4][it][x][y][z], sendar_z_F[x][y][(z)+(1)], sendar_z_B[x][y][(z)-(1)]);"
+    },
+    "319": {
+        "pos": 18491,
+        "comment": "request params[x][y][z], u_c[4][it][x][y][z]"
+    },
+    "320": {
+        "pos": 18491,
+        "comment": "execute cf setBorder_z[x][y][z]: setBorder_z(params[x][y][z], u_c[4][it][x][y][z], sendar_z_F[x][y][(z)+(1)], sendar_z_B[x][y][(z)-(1)]);"
+    },
+    "321": {
+        "pos": 18672,
+        "comment": "entry (migrate) for y=0..(size_y)-(1);"
+    },
+    "322": {
+        "pos": 18672,
+        "comment": "request size_y"
+    },
+    "323": {
+        "pos": 18689,
+        "comment": "body fork: for y = 0 .. (size_y)-(1)"
+    },
+    "324": {
+        "pos": 18702,
+        "comment": "entry (migrate) for z=0..(size_z)-(1);"
+    },
+    "325": {
+        "pos": 18702,
+        "comment": "request size_z"
+    },
+    "326": {
+        "pos": 18719,
+        "comment": "body fork: for z = 0 .. (size_z)-(1)"
+    },
+    "327": {
+        "pos": 18738,
+        "comment": "entry (migrate) cf _l347: vinit(sendar_x_R[0][y][z]);"
+    },
+    "328": {
+        "pos": 18837,
+        "comment": "entry (migrate) for y=0..(size_y)-(1);"
+    },
+    "329": {
+        "pos": 18837,
+        "comment": "request size_y"
+    },
+    "330": {
+        "pos": 18854,
+        "comment": "body fork: for y = 0 .. (size_y)-(1)"
+    },
+    "331": {
+        "pos": 18867,
+        "comment": "entry (migrate) for z=0..(size_z)-(1);"
+    },
+    "332": {
+        "pos": 18867,
+        "comment": "request size_z"
+    },
+    "333": {
+        "pos": 18884,
+        "comment": "body fork: for z = 0 .. (size_z)-(1)"
+    },
+    "334": {
+        "pos": 18903,
+        "comment": "entry (migrate) cf _l353: vinit(sendar_x_L[(size_x)-(1)][y][z]);"
+    },
+    "335": {
+        "pos": 18903,
+        "comment": "request_preliminary size_x"
+    },
+    "336": {
+        "pos": 18903,
+        "comment": "migrate"
+    },
+    "337": {
+        "pos": 18903,
+        "comment": "request size_x"
+    },
+    "338": {
+        "pos": 18903,
+        "comment": "execute cf _l353: vinit(sendar_x_L[(size_x)-(1)][y][z]);"
+    },
+    "339": {
+        "pos": 19021,
+        "comment": "entry (migrate) for x=0..(size_x)-(1);"
+    },
+    "340": {
+        "pos": 19021,
+        "comment": "request size_x"
+    },
+    "341": {
+        "pos": 19038,
+        "comment": "body fork: for x = 0 .. (size_x)-(1)"
+    },
+    "342": {
+        "pos": 19051,
+        "comment": "entry (migrate) for z=0..(size_z)-(1);"
+    },
+    "343": {
+        "pos": 19051,
+        "comment": "request size_z"
+    },
+    "344": {
+        "pos": 19068,
+        "comment": "body fork: for z = 0 .. (size_z)-(1)"
+    },
+    "345": {
+        "pos": 19087,
+        "comment": "entry (migrate) cf _l362: vinit(sendar_y_T[x][0][z]);"
+    },
+    "346": {
+        "pos": 19187,
+        "comment": "entry (migrate) for x=0..(size_x)-(1);"
+    },
+    "347": {
+        "pos": 19187,
+        "comment": "request size_x"
+    },
+    "348": {
+        "pos": 19204,
+        "comment": "body fork: for x = 0 .. (size_x)-(1)"
+    },
+    "349": {
+        "pos": 19217,
+        "comment": "entry (migrate) for z=0..(size_z)-(1);"
+    },
+    "350": {
+        "pos": 19217,
+        "comment": "request size_z"
+    },
+    "351": {
+        "pos": 19234,
+        "comment": "body fork: for z = 0 .. (size_z)-(1)"
+    },
+    "352": {
+        "pos": 19253,
+        "comment": "entry (migrate) cf _l369: vinit(sendar_y_B[x][(size_y)-(1)][z]);"
+    },
+    "353": {
+        "pos": 19253,
+        "comment": "request_preliminary size_y"
+    },
+    "354": {
+        "pos": 19253,
+        "comment": "migrate"
+    },
+    "355": {
+        "pos": 19253,
+        "comment": "request size_y"
+    },
+    "356": {
+        "pos": 19253,
+        "comment": "execute cf _l369: vinit(sendar_y_B[x][(size_y)-(1)][z]);"
+    },
+    "357": {
+        "pos": 19370,
+        "comment": "entry (migrate) for x=0..(size_x)-(1);"
+    },
+    "358": {
+        "pos": 19370,
+        "comment": "request size_x"
+    },
+    "359": {
+        "pos": 19387,
+        "comment": "body fork: for x = 0 .. (size_x)-(1)"
+    },
+    "360": {
+        "pos": 19400,
+        "comment": "entry (migrate) for y=0..(size_y)-(1);"
+    },
+    "361": {
+        "pos": 19400,
+        "comment": "request size_y"
+    },
+    "362": {
+        "pos": 19417,
+        "comment": "body fork: for y = 0 .. (size_y)-(1)"
+    },
+    "363": {
+        "pos": 19436,
+        "comment": "entry (migrate) cf _l377: vinit(sendar_z_F[x][y][0]);"
+    },
+    "364": {
+        "pos": 19536,
+        "comment": "entry (migrate) for x=0..(size_x)-(1);"
+    },
+    "365": {
+        "pos": 19536,
+        "comment": "request size_x"
+    },
+    "366": {
+        "pos": 19553,
+        "comment": "body fork: for x = 0 .. (size_x)-(1)"
+    },
+    "367": {
+        "pos": 19566,
+        "comment": "entry (migrate) for y=0..(size_y)-(1);"
+    },
+    "368": {
+        "pos": 19566,
+        "comment": "request size_y"
+    },
+    "369": {
+        "pos": 19583,
+        "comment": "body fork: for y = 0 .. (size_y)-(1)"
+    },
+    "370": {
+        "pos": 19602,
+        "comment": "entry (migrate) cf _l384: vinit(sendar_z_B[x][y][(size_z)-(1)]);"
+    },
+    "371": {
+        "pos": 19602,
+        "comment": "request_preliminary size_z"
+    },
+    "372": {
+        "pos": 19602,
+        "comment": "migrate"
+    },
+    "373": {
+        "pos": 19602,
+        "comment": "request size_z"
+    },
+    "374": {
+        "pos": 19602,
+        "comment": "execute cf _l384: vinit(sendar_z_B[x][y][(size_z)-(1)]);"
+    },
+    "375": {
+        "pos": 19718,
+        "comment": "entry (migrate) for x=0..(size_x)-(1);"
+    },
+    "376": {
+        "pos": 19718,
+        "comment": "request size_x"
+    },
+    "377": {
+        "pos": 19735,
+        "comment": "body fork: for x = 0 .. (size_x)-(1)"
+    },
+    "378": {
+        "pos": 19748,
+        "comment": "entry (migrate) for y=0..(size_y)-(1);"
+    },
+    "379": {
+        "pos": 19748,
+        "comment": "request size_y"
+    },
+    "380": {
+        "pos": 19765,
+        "comment": "body fork: for y = 0 .. (size_y)-(1)"
+    },
+    "381": {
+        "pos": 19781,
+        "comment": "entry (migrate) for z=0..(size_z)-(1);"
+    },
+    "382": {
+        "pos": 19781,
+        "comment": "request size_z"
+    },
+    "383": {
+        "pos": 19798,
+        "comment": "body fork: for z = 0 .. (size_z)-(1)"
+    },
+    "384": {
+        "pos": 19842,
+        "comment": "entry (migrate) cf loadBorder[x][y][z]: loadBorder(params[x][y][z], u_c[1][(it)+(1)][x][y][z], u_c[4][it][x][y][z], sendar_x_R[x][y][z], sendar_x_L[x][y][z], sendar_y_T[x][y][z], sendar_y_B[x][y][z], sendar_z_F[x][y][z], sendar_z_B[x][y][z]);"
+    },
+    "385": {
+        "pos": 19842,
+        "comment": "request sendar_z_B[x][y][z], sendar_y_T[x][y][z], sendar_z_F[x][y][z], u_c[4][it][x][y][z], sendar_x_R[x][y][z], sendar_x_L[x][y][z], sendar_y_B[x][y][z], params[x][y][z]"
+    },
+    "386": {
+        "pos": 19842,
+        "comment": "execute cf loadBorder[x][y][z]: loadBorder(params[x][y][z], u_c[1][(it)+(1)][x][y][z], u_c[4][it][x][y][z], sendar_x_R[x][y][z], sendar_x_L[x][y][z], sendar_y_T[x][y][z], sendar_y_B[x][y][z], sendar_z_F[x][y][z], sendar_z_B[x][y][z]);"
+    },
+    "387": {
+        "pos": 2016,
+        "comment": "migrate: if (cnt)==(2)"
+    },
+    "388": {
+        "pos": 2060,
+        "comment": "entry (migrate) cf finaly_g[x][y][z]: gather_arr(u_cur[0][x][y][z], u_cur[1][x][y][z], u_c);"
+    },
+    "389": {
+        "pos": 2060,
+        "comment": "request u_cur[1][x][y][z], u_cur[0][x][y][z]"
+    },
+    "390": {
+        "pos": 2060,
+        "comment": "execute cf finaly_g[x][y][z]: gather_arr(u_cur[0][x][y][z], u_cur[1][x][y][z], u_c);"
+    },
+    "391": {
+        "pos": 2216,
+        "comment": "migrate: if (cnt)>(2)"
+    },
+    "392": {
+        "pos": 2237,
+        "comment": "migrate: if ((cnt)%(2))==(0)"
+    },
+    "393": {
+        "pos": 2264,
+        "comment": "entry (migrate) for i=0..((cnt)/(2))-(1);"
+    },
+    "394": {
+        "pos": 2320,
+        "comment": "entry (migrate) cf gather[i][x][y][z]: gather_arr(u_cur[(i)*(2)][x][y][z], u_cur[((i)*(2))+(1)][x][y][z], sums[i][x][y][z]);"
+    },
+    "395": {
+        "pos": 2320,
+        "comment": "request u_cur[((i)*(2))+(1)][x][y][z], u_cur[(i)*(2)][x][y][z]"
+    },
+    "396": {
+        "pos": 2320,
+        "comment": "execute cf gather[i][x][y][z]: gather_arr(u_cur[(i)*(2)][x][y][z], u_cur[((i)*(2))+(1)][x][y][z], sums[i][x][y][z]);"
+    },
+    "397": {
+        "pos": 2515,
+        "comment": "entry (migrate) cf _l55: reduce_u((cnt)/(2), x, y, z, sums, u_c);"
+    },
+    "398": {
+        "pos": 2618,
+        "comment": "migrate: if ((cnt)%(2))!=(0)"
+    },
+    "399": {
+        "pos": 2644,
+        "comment": "entry (migrate) for i=0..((cnt)/(2))-(1);"
+    },
+    "400": {
+        "pos": 2698,
+        "comment": "entry (migrate) cf gather[i][x][y][z]: gather_arr(u_cur[(i)*(2)][x][y][z], u_cur[((i)*(2))+(1)][x][y][z], sums[i][x][y][z]);"
+    },
+    "401": {
+        "pos": 2698,
+        "comment": "request u_cur[(i)*(2)][x][y][z], u_cur[((i)*(2))+(1)][x][y][z]"
+    },
+    "402": {
+        "pos": 2698,
+        "comment": "execute cf gather[i][x][y][z]: gather_arr(u_cur[(i)*(2)][x][y][z], u_cur[((i)*(2))+(1)][x][y][z], sums[i][x][y][z]);"
+    },
+    "403": {
+        "pos": 2918,
+        "comment": "entry (migrate) cf copy_g[(cnt)/(2)][x][y][z]: copy_v(u_cur[(cnt)-(1)][x][y][z], sums[(cnt)/(2)][x][y][z]);"
+    },
+    "404": {
+        "pos": 2918,
+        "comment": "request u_cur[(cnt)-(1)][x][y][z]"
+    },
+    "405": {
+        "pos": 2918,
+        "comment": "execute cf copy_g[(cnt)/(2)][x][y][z]: copy_v(u_cur[(cnt)-(1)][x][y][z], sums[(cnt)/(2)][x][y][z]);"
+    },
+    "406": {
+        "pos": 3031,
+        "comment": "entry (migrate) cf _l62: reduce_u(((cnt)/(2))+(1), x, y, z, sums, u_c);"
+    }
+}

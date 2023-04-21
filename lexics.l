@@ -20,6 +20,8 @@ extern int cur_position_in_line;
 extern int line_num;
 extern ast* ast_;
 
+bool is_end_of_define = false;
+
 #define SAVE_TOKEN std::string* token = new std::string(yytext); \
 				yylval.string_ = new luna_string(token); \
 				ast_->push_token(token)
@@ -94,6 +96,7 @@ NOCPU { next_token(yystring()); return KW_NOCPU;}
 ">>" {next_token(yystring()); return RARR; }
 "C++" {next_token(yystring()); return KW_CPP; }
 "__block" {next_token(yystring()); return KW_BLOCK; }
+"#define" {next_token(yystring()); std::cerr << "DEFINE\n"; is_end_of_define = true; return KW_DEFINE; }
 
 [0-9]+ {
 	SAVE_TOKEN;
@@ -107,8 +110,12 @@ NOCPU { next_token(yystring()); return KW_NOCPU;}
 	return REAL;
 }
 
-\/\/.*$ { next_token(yystring()); /* comments */ }
+\/\*.*\*\/ { std::cerr << std::string(yytext, yyleng) << std::endl; /* comments */ }
 
+
+\`.*\n { std::cerr << std::string(yytext, yyleng) << std::endl; /* comments */ }
+
+\/\/.*$ { next_token(yystring()); std::cerr << std::string(yytext, yyleng) << std::endl;/* comments */ }
 
 \"[^\"]*\" { 
 	next_token(yystring());
@@ -121,7 +128,15 @@ NOCPU { next_token(yystring()); return KW_NOCPU;}
 	return NAME;
 }
 
-\n { next_line(); next_token(yystring()); }
+\n { 
+	next_line(); 
+	next_token(yystring());
+
+	if (is_end_of_define) {
+		return EOD;
+		is_end_of_define = false;
+	}
+}
 
 [ \t]+ { next_token(yystring()); }
 
@@ -168,5 +183,5 @@ void yyerror(const char* msg) {
 
 	// has_errors = true; */
 
-	/* std::cerr << msg << "ERROR\n"; */
+	std::cerr << "ERROR\n";
 }

@@ -22,7 +22,7 @@ bool ast_analyzer::analyze() {
     assert(ast_->get_program()->sub_defs != nullptr);
 
     bool has_errors = analyze_shadow_import();
-    has_errors = analyze_df_double_declaration();
+    has_errors = analyze_df_redeclaration();
     has_errors = analyze_existance_main_cf();
     has_errors = analyze_cf_redeclaration();
     return has_errors;
@@ -48,8 +48,7 @@ bool ast_analyzer::analyze_df_double_declaration() {
             reporter.report(ERROR_LEVEL::ERROR,
                 "DF " + i->to_string() + " is already defined",
                 get_line_from_file(i->line_),
-                i->line_,
-                i->pos_
+                i->line_
             );
             has_errors = true;
         }
@@ -100,6 +99,108 @@ bool ast_analyzer::analyze_existance_main_cf() {
     return true;
 }
 
+bool ast_analyzer::has_df_redeclaration(std::vector<param *>* params, block* block_) {
+    std::vector<luna_string* >* dfs = nullptr;
+
+    if (block_->opt_dfdecls_->dfdecls_ != nullptr) {
+        dfs = block_->opt_dfdecls_->dfdecls_->name_seq_->names_;
+    } 
+
+    bool has_errors;
+
+    std::set<std::string> variables;
+
+    if (params != nullptr) {
+        for (auto i : *params) {
+            if (variables.count(*(i->name_->get_value())) > 0) {
+                reporter.report(ERROR_LEVEL::ERROR,
+                    "Param \"" + *(i->name_->get_value()) + "\" is already defined",
+                    get_line_from_file(i->line_),
+                    i->line_
+                );
+                has_errors = true;
+            }
+            else {
+                variables.insert(*(i->name_->get_value()));
+            }
+        }
+    }
+
+    if (dfs != nullptr) {
+        for (auto i : *dfs) {
+            if (variables.count(*(i->get_value())) > 0) {
+                reporter.report(ERROR_LEVEL::ERROR,
+                    "DF \"" + i->to_string() + "\" is already defined",
+                    get_line_from_file(i->line_),
+                    i->line_
+                );
+                has_errors = true;
+            }
+            else {
+                variables.insert(*(i->get_value()));
+            }
+        }
+    }
+
+    std::vector<statement *>* statements = block_->statement_seq_->statements_;
+
+    for (auto i : *statements) {
+        cf_statement* cf_stat = dynamic_cast<cf_statement*>(i);
+        if (cf_stat == nullptr) continue;
+
+        if (cf_stat->opt_label_->id_ == nullptr) continue;
+
+        std::cerr << "cf = " << *(cf_stat->opt_label_->id_->get_value()) << std::endl;
+        
+        if (variables.count(*(cf_stat->opt_label_->id_->get_value())) > 0) {
+            reporter.report(ERROR_LEVEL::ERROR,
+                "DF \"" + cf_stat->opt_label_->id_->to_string() + "\" is already defined",
+                get_line_from_file(cf_stat->opt_label_->id_->line_),
+                cf_stat->opt_label_->id_->line_
+            );
+            has_errors = true;
+        }
+        else {
+            variables.insert(*(cf_stat->opt_label_->id_->get_value()));
+        }
+    }
+
+    for (auto i : *statements) {
+        // std::cerr << i->to_string() << std::endl;
+
+        cf_statement* cf_stat = dynamic_cast<cf_statement*>(i);
+        if (cf_stat != nullptr) continue;  // игнорируем cf_statement, тк он не создает новую область видимости
+
+        bool error = has_df_redeclaration(params, i->block_);
+        if (error) has_errors = error;
+    }
+
+    return has_errors;
+}
+
+bool ast_analyzer::analyze_df_redeclaration() {
+    std::vector<sub_def *> sub_defs = *(ast_->get_program()->sub_defs);
+    std::vector<luna_sub_def *> luna_funcs;
+    for (auto i : sub_defs) {
+        luna_sub_def* luna_func = dynamic_cast<luna_sub_def *> (i); 
+        if (luna_func == nullptr) continue;
+        luna_funcs.push_back(luna_func);
+    }
+    bool has_errors;
+
+    for (auto luna_func : luna_funcs) {
+        std::vector<param *>* params = nullptr;
+
+        if (luna_func->params_->param_seq_ != nullptr) {
+            params = luna_func->params_->param_seq_->params_;
+        }
+
+        // std::cerr << luna_func->block_->to_string() << std::endl;
+        return has_df_redeclaration(params, luna_func->block_);
+    }
+    return false;
+}
+
 bool ast_analyzer::analyze_cf_redeclaration() {
     std::vector<sub_def *> sub_defs = *(ast_->get_program()->sub_defs);
     std::vector<luna_sub_def *> luna_funcs;
@@ -113,11 +214,10 @@ bool ast_analyzer::analyze_cf_redeclaration() {
     std::vector<luna_sub_def *> duplicated = find_pairs<luna_sub_def *>(&luna_funcs);
 
     for (auto i : duplicated) {
-        reporter.report(ERROR_LEVEL::ERROR,
-            "CF " + *(i->code_id_->value_) + " is aleady defined",
+        reporter.report(ERROR_LEVEL::WARNING,
+            "CF \"" + *(i->code_id_->value_) + "\" is aleady defined.",
             get_line_from_file(i->code_id_->line_),
-            i->code_id_->line_,
-            i->code_id_->pos_
+            i->code_id_->line_
         );
     }
 
@@ -147,8 +247,7 @@ bool ast_analyzer::analyze_shadow_import() {
             reporter.report(ERROR_LEVEL::WARNING,
                 "such codeid aleady define",
                 get_line_from_file(import_decl->luna_code_id_->line_),
-                import_decl->luna_code_id_->line_,
-                import_decl->luna_code_id_->pos_
+                import_decl->luna_code_id_->line_
             );
         }
 

@@ -17,7 +17,6 @@ public:
         const std::string& error_msg,
         const std::string& error_line,
         unsigned int line,
-        unsigned int pos,
         const std::string& expectation = "")
     {
         if (errors_number < LIMIT_ERRORS) {
@@ -28,8 +27,7 @@ public:
                 return;
             }
 
-            fprintf(stderr, "%s. Line %d-%d: %s\n\t%s\n", lvl.c_str(), line, pos, error_msg.c_str(), error_line.c_str());
-            fprintf(stderr, "\t%s^---- here\n", repeat_spaces(pos).c_str());
+            fprintf(stderr, "%s. Line %d: %s\n\t%s\n", lvl.c_str(), line, error_msg.c_str(), error_line.c_str());
 
             if (expectation != "") {
                 fprintf(stderr, "Expected: %s\n\n",  expectation.c_str());
@@ -48,11 +46,6 @@ public:
 private:
     unsigned int errors_number = 0;
     const int LIMIT_ERRORS = 1000;
-
-    std::string repeat_spaces(const int num) {
-        if (num == 0) return "";
-        return std::string(num, ' ');
-    }
 };
 
 #endif
