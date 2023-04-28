@@ -342,9 +342,20 @@ class luna_cast : public expr {
         }
 };
 
-class to_int : public luna_cast {};
-class to_real : public luna_cast {};
-class to_string : public luna_cast {};
+class to_int : public luna_cast {
+public:
+    to_int(expr* expr) : luna_cast(expr) {} 
+};
+
+class to_real : public luna_cast {
+public:
+    to_real(expr* expr) : luna_cast(expr) {} 
+};
+
+class to_str: public luna_cast {
+public:
+    to_str(expr* expr) : luna_cast(expr) {} 
+};
 
 class code_df_param : public virtual_token {
     public:
@@ -427,14 +438,14 @@ class eq : public bin_op {
         }
 };
 
-class eqg : public bin_op {
-    public:
-        eqg(expr *left, expr *right) : bin_op(left, right) {}
+// class eqg : public bin_op {
+//     public:
+//         eqg(expr *left, expr *right) : bin_op(left, right) {}
 
-        std::string to_string() const override {
-            return left_->to_string() + " >= " + right_->to_string();
-        }
-};
+//         std::string to_string() const override {
+//             return left_->to_string() + " >= " + right_->to_string();
+//         }
+// };
 
 class sum : public bin_op {
     public:
@@ -522,7 +533,7 @@ class dbleq : public bin_op {
         dbleq(expr *left, expr *right) : bin_op(left, right) {}
 
         std::string to_string() const override {
-            return left_->to_string() + "!=" + right_->to_string();
+            return left_->to_string() + "==" + right_->to_string();
         }
 };
 

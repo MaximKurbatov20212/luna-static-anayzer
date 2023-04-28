@@ -117,6 +117,7 @@ NOCPU { next_token(yystring()); return KW_NOCPU;}
 \/\/.*$ { next_token(yystring()); std::cerr << std::string(yytext, yyleng) << std::endl;/* comments */ }
 
 \"[^\"]*\" { 
+	SAVE_TOKEN;
 	next_token(yystring());
 	return STRING; 
 }

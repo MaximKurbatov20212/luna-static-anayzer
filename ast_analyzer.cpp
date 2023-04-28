@@ -4,6 +4,8 @@
 #include <set>
 #include <map>
 #include <assert.h>
+#include <regex>
+
 
 extern error_reporter reporter;
 extern std::string line;
@@ -22,13 +24,251 @@ bool ast_analyzer::have_such_code_id(std::map<std::string, std::string>& map,
 bool ast_analyzer::analyze() {
     assert(ast_->get_program()->sub_defs != nullptr);
 
-    bool has_errors = analyze_shadow_import();
-    has_errors = analyze_df_redeclaration();
-    has_errors = analyze_existance_main_cf();
-    has_errors = analyze_cf_redeclaration();
-    return has_errors;
+    // bool has_errors = analyze_shadow_import();
+    // has_errors = analyze_df_redeclaration();
+    // has_errors = analyze_existance_main_cf();
+    // has_errors = analyze_cf_redeclaration();
+
+
+    // return has_errors;
+    analyze_calling_undeclarated_func();
+    return true;
 }
 
+std::vector<ast_analyzer::cf_info<expr *> *> ast_analyzer::get_all_calling(block* block) {
+    std::vector<cf_info<expr *> *> cfs;
+    for (auto i : *(block->statement_seq_->statements_)) {
+        if (i == nullptr) continue;
+
+        cf_statement* cur_cf = dynamic_cast<cf_statement*> (i);
+        if (cur_cf != nullptr) {
+            cf_info<expr *>* c;
+            if (cur_cf->opt_exprs_->exprs_seq_ == nullptr) {
+                c = new cf_info<expr *>(cur_cf->code_id_, new std::vector<expr *>());
+            }
+            else {
+                c = new cf_info<expr *>(cur_cf->code_id_, cur_cf->opt_exprs_->exprs_seq_->expr_);
+            }
+            cfs.push_back(c);
+            continue;
+        }
+
+        if_statement* cur_if = dynamic_cast<if_statement*> (i);
+        if (cur_if != nullptr) {
+            std::vector<ast_analyzer::cf_info<expr *> *> inner_cfs = get_all_calling(cur_if->block_);
+            cfs.insert(cfs.end(), inner_cfs.begin(), inner_cfs.end());
+            continue;
+        }
+
+        while_statement* cur_while = dynamic_cast<while_statement*> (i);
+        if (cur_while != nullptr) {
+            std::vector<ast_analyzer::cf_info<expr *> *> inner_cfs = get_all_calling(cur_while->block_);
+            cfs.insert(cfs.end(), inner_cfs.begin(), inner_cfs.end());
+            continue;
+        }
+
+        for_statement* cur_for = dynamic_cast<for_statement*> (i);
+        if (cur_for != nullptr) {
+            std::vector<ast_analyzer::cf_info<expr *> *> inner_cfs = get_all_calling(cur_for->block_);
+            cfs.insert(cfs.end(), inner_cfs.begin(), inner_cfs.end());
+            continue;
+        }
+    }
+
+    return cfs;
+}
+
+bool is_int(std::string s) {
+    return std::regex_match(s, std::regex("[0-9]+"));
+}
+
+bool is_real(std::string s) {
+    return std::regex_match(s, std::regex("[0-9]+.[0-9]+"));
+}
+
+bool is_string(std::string s) {
+    return std::regex_match(s, std::regex("\"[^\"]*\""));
+}
+
+
+bool ast_analyzer::analyze_calling_undeclarated_func() {
+    bool has_errors = false;
+
+    std::vector<sub_def *> sub_defs = *(ast_->get_program()->sub_defs);
+    std::vector<cf_info<luna_string *> *> func_aliases;
+    std::vector<cf_info<expr *>*> cfs;
+    std::vector<cf_info<luna_string *>*> calls;
+
+    for (auto i : sub_defs) {
+        if (i == nullptr) continue;
+
+        import* import_decl = dynamic_cast<import *> (i); 
+        if (import_decl != nullptr) { 
+            cf_info<luna_string *>* c = new cf_info<luna_string *>(import_decl->luna_code_id_, new std::vector<luna_string *>());
+
+            if (import_decl->params_->seq_ != nullptr) {
+                for (auto param : *(import_decl->params_->seq_->params_)) {
+                    c->params_->push_back(param->type_);
+                }
+            }
+            func_aliases.push_back(c);
+        }
+
+        luna_sub_def* luna_sub_def_decl = dynamic_cast<luna_sub_def *> (i); 
+        if (luna_sub_def_decl != nullptr) {
+            cf_info<luna_string *>* c = new cf_info<luna_string *>(luna_sub_def_decl->code_id_, new std::vector<luna_string *>());
+            if (luna_sub_def_decl->params_->param_seq_ != nullptr) {
+                for (auto param : *(luna_sub_def_decl->params_->param_seq_->params_)) {
+                    c->params_->push_back(param->type_);
+                }
+            }
+            func_aliases.push_back(c);
+            std::vector<cf_info<expr *>*> cur_cfs = get_all_calling(luna_sub_def_decl->block_);
+
+            for (auto cur_cf : cur_cfs) {
+                std::vector<luna_string*>* types = new std::vector<luna_string *>();
+                for (auto param : *(cur_cf->params_)) {
+
+                    to_int* to_int_ = dynamic_cast<to_int*>(param);
+                    if (to_int_ != nullptr) {
+                        types->push_back(new luna_string(new std::string("int")));
+                        continue;
+                    }
+
+                    to_real* to_real_ = dynamic_cast<to_real*>(param);
+                    if (to_real_ != nullptr) {
+                        types->push_back(new luna_string(new std::string("real")));
+                        continue;
+                    }
+
+                    to_str* to_str_ = dynamic_cast<to_str*>(param);
+                    if (to_str_ != nullptr) {
+                        types->push_back(new luna_string(new std::string("string")));
+                        continue;
+                    }
+
+                    eq* eq_ = dynamic_cast<eq*>(param);
+                    if (eq_ != nullptr) {
+                        types->push_back(new luna_string(new std::string("int")));
+                        continue;
+                    }
+                    neq* neq_ = dynamic_cast<neq*>(param);
+                    if (neq_ != nullptr) {
+                        types->push_back(new luna_string(new std::string("int")));
+                        continue;
+                    }
+                    dbleq* dbleq_ = dynamic_cast<dbleq*>(param);
+                    if (dbleq_ != nullptr) {
+                        types->push_back(new luna_string(new std::string("int")));
+                        continue;
+                    }
+                    
+                    lt* lt_ = dynamic_cast<lt*>(param);
+                    if (lt_ != nullptr) {
+                        types->push_back(new luna_string(new std::string("int")));
+                        continue;
+                    }
+
+                    gt* gt_ = dynamic_cast<gt*>(param);
+                    if (gt_ != nullptr) {
+                        types->push_back(new luna_string(new std::string("int")));
+                        continue;
+                    }
+
+                    mod* mod_ = dynamic_cast<mod*>(param);
+                    if (mod_ != nullptr) {
+                        types->push_back(new luna_string(new std::string("int")));
+                        continue;
+                    }
+
+                    geq* geq_ = dynamic_cast<geq*>(param);
+                    if (geq_ != nullptr) {
+                        types->push_back(new luna_string(new std::string("int")));
+                        continue;
+                    }
+
+                    leq* leq_ = dynamic_cast<leq*>(param);
+                    if (leq_ != nullptr) {
+                        types->push_back(new luna_string(new std::string("int")));
+                        continue;
+                    }
+
+                    if (is_int(param->to_string())) {
+                        types->push_back(new luna_string(new std::string("int")));
+                        continue;
+                    }
+                    else if (is_real(param->to_string())) {
+                        types->push_back(new luna_string(new std::string("real")));
+                        continue;
+                    }
+
+                    else if (is_string(param->to_string())) {
+                        types->push_back(new luna_string(new std::string("string")));
+                        continue;
+                    }
+
+                    std::cerr << "nullptr\n";
+                    types->push_back(nullptr);
+                }
+                calls.push_back(new cf_info<luna_string *>(cur_cf->alias_, types));
+            }
+        }
+    }
+
+    for (auto i : func_aliases) {
+        std::cerr << i->to_string() << std::endl;
+    }
+
+    std::cerr << "--------------\n";
+
+    for (auto i : calls) {
+        luna_string*  alias = i->alias_;
+        bool has_such_cf = false;
+        for (auto j : func_aliases) {
+            if (*(j->alias_->get_value()) != *(alias->get_value())) {
+                continue;
+            } 
+            has_such_cf = true;
+
+            if (j->params_->size() != i->params_->size()) {
+                reporter.report(ERROR_LEVEL::ERROR,
+                    "The number of parameters in call and declaration doesn't match",
+                    "\tLine " + std::to_string(j->alias_->line_) + ": " + get_line_from_file(j->alias_->line_) + " // declaration\n" \
+                    + "\tLine " + std::to_string(i->alias_->line_)+ ": " + get_line_from_file(i->alias_->line_) + " // calling \n",
+                    0
+                );
+
+                break;
+            }
+
+            for (int k = 0; k < j->params_->size(); k++) {
+                if (i->params_->at(k) == nullptr) {
+                    continue; // runtime definition type
+                }
+
+                if (*(j->params_->at(k)->get_value()) != *(i->params_->at(k)->get_value())) {
+                    reporter.report(ERROR_LEVEL::ERROR,
+                        "Invalid " + std::to_string(k + 1) + "'th parameter type: \"" + (*(i->params_->at(k)->get_value())) + "\"",
+                        get_line_from_file(i->alias_->line_),
+                        i->alias_->line_,
+                        *(j->params_->at(k)->get_value())
+                    );
+                    break;
+                }
+            }
+        }
+
+        if (!has_such_cf) {
+            reporter.report(ERROR_LEVEL::ERROR,
+                "Undefined reference: \"" + *(i->alias_->get_value()) + "\"",
+                get_line_from_file(i->alias_->line_),
+                i->alias_->line_
+            );
+        }
+    }
+
+    return true;
+}
 
 template <typename T>
 std::vector<T> ast_analyzer::find_pairs(std::vector<T>* v) {
@@ -78,16 +318,12 @@ std::map<std::string, std::set<uint>> ast_analyzer::find_redecls(std::vector<lun
 
     for (auto i : values) {
         if (map.count(*(i->get_value())) == 0) {
-            // std::cerr << i->line_ << std::endl;
             std::set<uint> set = std::set<uint>();
             set.insert(i->line_);
             map.insert(std::pair<std::string, std::set<uint>>(*(i->get_value()), set));
         }
         else {
-            // std::cerr << i->line_ << std::endl;
             map.at(*(i->get_value())).insert(i->line_);
-            // std::cerr << map.at(*(i->get_value())).size() << std::endl;
-            // std::cerr << set.size() << std::endl;
         }
     }
     return map;
@@ -293,7 +529,18 @@ std::string ast_analyzer::get_line_from_file(uint num) {
         throw std::runtime_error("Couldn't allocate memory");
     }
 
-    std::string l = std::string(line);
+    int start = 0;
+    for (int i = 0; i < string_len; i++) {
+        if (line[i] != ' '){
+            start = i;
+            break;
+        }
+    }
+
+    std::string l;
+    for (int i = start; i < string_len - 1; i++) {
+        l.push_back(line[i]);
+    }
 
     delete line;
     return l;

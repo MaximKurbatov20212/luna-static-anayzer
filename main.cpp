@@ -32,7 +32,7 @@ int main(int argc, char** argv) {
 
     yyparse();
 
-    std::cerr << ast_->to_string() << std::endl;
+    // std::cerr << ast_->to_string() << std::endl;
 
     ast_analyzer analyzer = ast_analyzer(ast_, yyin);
 

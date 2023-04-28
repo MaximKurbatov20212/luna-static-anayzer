@@ -404,6 +404,7 @@ statement:
     } 
     ;
 
+/* cf a : init(); */
 cf_statement: opt_label code_id opt_exprs opt_setdf_rules opt_rules opt_behavior SCOLON {
         $$ = new cf_statement($1, $2, $3, $4, $5, $6);
     }
@@ -555,28 +556,31 @@ code_id:
 	;
 
 expr:
-	INT { $$ = $1; }
-	| REAL { $$ = $1; }
-	| STRING { $$ = $1; }
-	| KW_INT LB expr RB {}
-	| KW_REAL LB expr RB  {}
-	| KW_STRING LB expr RB {}
-	| expr PLUS expr { $$ = new sum($1, $3); }
-	| expr MINUS expr {} { $$ = new sub($1, $3); }
-	| expr MUL expr { $$ = new mul($1, $3); }
-	| expr DIV expr { $$ = new div1($1, $3); }
-	| expr MOD expr { $$ = new mod($1, $3); }
-	| expr LT expr { $$ = new lt($1, $3); }
-	| expr GT expr { $$ = new gt($1, $3); }
-	| expr LEQ expr { $$ = new leq($1, $3); }
-	| expr GEQ expr { $$ = new geq($1, $3); }
-	| expr DBLEQ expr{ $$ = new dbleq($1, $3); }
-	| expr NEQ expr { $$ = new neq($1, $3); }
-	| expr DBLAMP expr  { $$ = new dblamp($1, $3); }
-	| expr DBLPIPE expr { $$ = new dblpipe($1, $3); }
-	| LB expr RB { $$ = $2; }
-	| id { $$ = $1; }
-	| expr QMARK expr COLON expr {}
+	INT { $$ = $1; } // int
+	| REAL { $$ = $1; } // real 
+	| STRING { $$ = $1; } // string
+	| KW_INT LB expr RB { $$ = new to_int($3); } 
+	| KW_REAL LB expr RB  {$$ = new to_real($3); } // real
+	| KW_STRING LB expr RB { $$ = new to_str($3); } // string
+
+	| expr PLUS expr { $$ = new sum($1, $3); } // ??
+	| expr MINUS expr { $$ = new sub($1, $3); } // ??
+	| expr MUL expr { $$ = new mul($1, $3); } // ??
+	| expr DIV expr { $$ = new div1($1, $3); } // ??
+
+	| expr MOD expr { $$ = new mod($1, $3); } // int 
+	| expr LT expr { $$ = new lt($1, $3); } // int
+	| expr GT expr { $$ = new gt($1, $3); } // int
+	| expr LEQ expr { $$ = new leq($1, $3); } // int
+	| expr GEQ expr { $$ = new geq($1, $3); } // int
+	| expr DBLEQ expr{ $$ = new dbleq($1, $3); } // int
+	| expr NEQ expr { $$ = new neq($1, $3); } //int
+
+	| expr DBLAMP expr { $$ = new dblamp($1, $3); } //
+	| expr DBLPIPE expr { $$ = new dblpipe($1, $3); } //
+	| LB expr RB { $$ = $2; } // ??
+	| id { $$ = $1; } // ?? 
+	| expr QMARK expr COLON expr {} //
 	;
 
 opt_params:
