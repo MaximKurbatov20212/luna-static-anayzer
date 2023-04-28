@@ -96,7 +96,6 @@ NOCPU { next_token(yystring()); return KW_NOCPU;}
 ">>" {next_token(yystring()); return RARR; }
 "C++" {next_token(yystring()); return KW_CPP; }
 "__block" {next_token(yystring()); return KW_BLOCK; }
-"#define" {next_token(yystring()); std::cerr << "DEFINE\n"; is_end_of_define = true; return KW_DEFINE; }
 
 [0-9]+ {
 	SAVE_TOKEN;
@@ -132,10 +131,6 @@ NOCPU { next_token(yystring()); return KW_NOCPU;}
 	next_line(); 
 	next_token(yystring());
 
-	if (is_end_of_define) {
-		return EOD;
-		is_end_of_define = false;
-	}
 }
 
 [ \t]+ { next_token(yystring()); }
@@ -172,16 +167,12 @@ std::string yystring() {
 }
 
 void yyerror(const char* msg) {
+	/* std::cerr << "yyerror\n"; */
 	/* if (has_errors) return; */
-
-	 /* reporter.report(ERROR_LEVEL::ERROR, 
-          line,
-	 		line_num,
-	 		cur_position_in_line,
-	 "Sorry, we can't find out type of this problem.\n\t  Report this example: https://vk.com/morning__coffee"
-         ); */
-
+	reporter.report(ERROR_LEVEL::ERROR, 
+		"Unexpected token",
+        line,
+	 	line_num
+    );
 	// has_errors = true; */
-
-	std::cerr << "ERROR\n";
 }

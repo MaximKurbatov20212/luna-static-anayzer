@@ -22,8 +22,13 @@ public:
         if (errors_number < LIMIT_ERRORS) {
             std::string lvl = level == ERROR ? "Error" : "Warning";
 
-            if (error_line == "") {
+            if (error_line == "" ) {
                 fprintf(stderr, "%s. %s\n", lvl.c_str(), error_msg.c_str());
+                return;
+            }
+
+            if (line == 0) {
+                fprintf(stderr, "%s. %s\n %s\n", lvl.c_str(), error_msg.c_str(), error_line.c_str());
                 return;
             }
 
@@ -32,6 +37,8 @@ public:
             if (expectation != "") {
                 fprintf(stderr, "Expected: %s\n\n",  expectation.c_str());
             }
+
+            std::cerr << std::endl;
         }
 
         if (level == ERROR) {

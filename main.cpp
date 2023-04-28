@@ -32,20 +32,14 @@ int main(int argc, char** argv) {
 
     yyparse();
 
-    // if (reporter.has_errors()) {
-    //     // delete ast;
-    //     return EXIT_ERROR;
-    // }
-
-    // std::cerr << "ast\n";
-    // std::cerr << ast_->to_string() << std::endl;
+    std::cerr << ast_->to_string() << std::endl;
 
     ast_analyzer analyzer = ast_analyzer(ast_, yyin);
 
-    // std::cerr << "analyze\n";
+    std::cerr << "analyze\n";
     analyzer.analyze();
 
-    delete ast_;
+    // delete ast_;
     fclose(yyin);
     return EXIT_SUCCESS;
 }

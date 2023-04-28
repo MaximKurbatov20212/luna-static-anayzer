@@ -94,7 +94,6 @@ error_reporter reporter;
 %token<string_> EQ LB RB LT GT LSB RSB DIAP QMARK DBLEQ NEQ LEQ EQG GEQ AT
 %token<string_> PLUS MINUS MUL DIV MOD TAB WS SWS LN BUCK
 %token<string_> PIPE ASSIGN LCB RCB IDX DBLPIPE DBLAMP
-%token<string_> KW_DEFINE EOD
 
 %type<program_> program;
 %type<sub_def_> sub_def;
@@ -184,6 +183,16 @@ sub_def:
         $$ = new import($2, $4, $7, std::string(""));
     }
 
+	| KW_IMPORT error SCOLON {
+        delete $$;
+        $$ = nullptr;
+    }
+
+    | error SCOLON {
+        delete $$;
+        $$ = nullptr;
+    }
+
     // import init(params) as init : CUDA;
     | KW_IMPORT code_id LB opt_ext_params RB KW_AS code_id COLON KW_CUDA SCOLON {
         $$ = new import($2, $4, $7, std::string("cuda"));
@@ -199,7 +208,7 @@ sub_def:
         $$ = new cxx_block_def($2);
     }
 
-    | KW_CPP NAME KW_BLOCK LB error RB {
+    /* | KW_CPP NAME KW_BLOCK LB error RB {
         reporter.report(ERROR_LEVEL::ERROR, 
             "Unexpected token",
             line,
@@ -207,15 +216,26 @@ sub_def:
             "int"
         );
     }
+*/
 
-    | KW_IMPORT code_id LB opt_ext_params RB error SCOLON {
+    /* | KW_IMPORT code_id LB opt_ext_params RB error SCOLON {
         reporter.report(ERROR_LEVEL::ERROR, 
             "Unexpected token",
             line,
             @6.first_line,
             "keyword as"
         );
-    }
+        yyerrok;
+        $$ = nullptr;
+    }  */
+
+
+    /*
+    | KW_IMPORT error SCOLON {
+        $$ = nullptr;
+        yyerrok;
+    } 
+    */
 
     /* | KW_IMPORT code_id LB opt_ext_params error SCOLON {
         reporter.report(ERROR_LEVEL::ERROR, 
@@ -243,7 +263,6 @@ opt_ext_params:
         $$ = new opt_ext_params($1);
     }
 	| { $$ = new opt_ext_params(nullptr); }
-	;
 
 ext_params_seq:
 	code_df_param  { 
@@ -261,7 +280,7 @@ code_df_param:
         $$ = new code_df_param($1, $2);
     }
 
-    | error COMMA {
+    /* | error COMMA {
 	    reporter.report(ERROR_LEVEL::ERROR,
             "Unexpected token",
             line, 
@@ -269,7 +288,7 @@ code_df_param:
             "int, string, value, real, name"
         ); 
         $$ = nullptr;
-    }
+    } */
 ;
 
 code_df:
@@ -279,7 +298,6 @@ code_df:
 
 type:
 	KW_INT { $$ = $1;}
-
 	| KW_REAL { $$ = $1; } 
 	| KW_STRING  { $$ = $1; } 
 	| KW_NAME { $$ = $1; } 
@@ -303,8 +321,7 @@ opt_dfdecls:
         $$ = new opt_dfdecls($1); 
     }
 
-	| { $$ = new opt_dfdecls(nullptr);
-     }
+	| { $$ = new opt_dfdecls(nullptr); }
 	;
 
 dfdecls:
@@ -321,7 +338,7 @@ name_seq:
     }
 	| name_seq COMMA NAME {
         $1->names_->push_back($3);
-        $3->set_position(@1.first_line);
+        $3->set_position(@3.first_line);
     }
 	;
 
@@ -335,15 +352,6 @@ statement_seq:
         if ($1 != nullptr) {
             $1->statements_->push_back($2);
         }
-    }
-
-    | error SCOLON {
-	    reporter.report(ERROR_LEVEL::ERROR,
-            "Unexpected token",
-            line,
-            @1.first_column,
-            "cf, if, let, for, while.");
-        $$ = nullptr;
     }
     ;
 
@@ -374,6 +382,26 @@ statement:
     | for_statement { $$ = $1; }
     | while_statement { $$ = $1; }
     | if_statement { $$ = $1; }
+
+    /* | NAME EQ INT SCOLON {
+	    reporter.report(ERROR_LEVEL::ERROR,
+            "Unexpected token",
+            line,
+            @1.first_column,
+            "Bad");
+        delete $$;
+        $$ = nullptr;
+    } */
+
+    | error SCOLON {
+	    reporter.report(ERROR_LEVEL::ERROR,
+            "Unexpected token",
+            line,
+            @1.first_column,
+            "cf, if, let, for, while.");
+        delete $$;
+        $$ = nullptr;
+    } 
     ;
 
 cf_statement: opt_label code_id opt_exprs opt_setdf_rules opt_rules opt_behavior SCOLON {
@@ -554,6 +582,16 @@ expr:
 opt_params:
 	LB params_seq RB { $$ = new opt_params($2); }
 	| LB RB { $$ = new opt_params(nullptr); }
+
+    | LB error RB {
+        reporter.report(ERROR_LEVEL::ERROR,
+            "Unexpected token",
+            line,
+            @1.first_column,
+            "int, name, value, real, string");
+        delete $$;
+        $$ = new opt_params(nullptr);
+    }
 	;
 
 params_seq:
@@ -569,8 +607,9 @@ params_seq:
 param:
 	type NAME { 
         $$ = new param($1, $2); 
-        $$->set_position(@1.first_line);
-        }
+        $$->set_position(@2.first_line);
+        $2->set_position(@2.first_line);
+    }
 	;
 
 where_type: KW_RUSH { $$ = $1; }

@@ -16,6 +16,7 @@ public:
         line_ = line;
     }
 
+
     virtual std::string to_string() const { return std::string("this class has no to_string method");}
     virtual ~virtual_token() {}
 };
@@ -25,7 +26,10 @@ class expr : public virtual_token {};
 class luna_string : public expr {
 public:
     std::string* value_;
-    luna_string(std::string* value) : value_(value) {} 
+   
+    luna_string(std::string* value, uint line = 0) : value_(value) {
+        line_ = line;
+    } 
 
     luna_string() : value_(new std::string()) {}
 
@@ -194,6 +198,7 @@ class statement_seq : public virtual_token {
         std::string to_string() const override {
             std::string s;
             for (auto i : *statements_) {
+                if (i == nullptr) continue;
                 s += i->to_string() + ";\n";
             }
             return s;
@@ -346,9 +351,7 @@ class code_df_param : public virtual_token {
         luna_string *type_;
         luna_string *code_df_;
 
-        code_df_param(luna_string* type, luna_string* df) : type_(type), code_df_(df) {
-
-        }
+        code_df_param(luna_string* type, luna_string* df) : type_(type), code_df_(df) {}
 
         ~code_df_param() {
             // // // std::cerr << "code param dtor: type_\n";
@@ -564,7 +567,7 @@ class program : public virtual_token {
         std::string to_string() const override {
             std::string res;
             for (auto i : *sub_defs) {
-                std::cerr << i->to_string() + '\n';
+                if (i == nullptr) continue;
                 res += i->to_string() + '\n';
             }
             res.pop_back();
@@ -616,7 +619,6 @@ class luna_sub_def : public sub_def {
                         block_(new block()) {}
 
         ~luna_sub_def() {
-            // std::cerr << "luna_sub_def dtor\n";
             delete control_pragma_;
             delete code_id_;
             delete params_;
@@ -1090,7 +1092,6 @@ public:
 
     std::string to_string() const {
         // // std::cerr << "ast to_string\n";
-        std::cerr << program_->to_string();
         return program_->to_string();
     }
 
