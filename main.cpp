@@ -37,6 +37,7 @@ int main(int argc, char** argv) {
     ast_analyzer analyzer = ast_analyzer(ast_, yyin);
 
     std::cerr << "analyze\n";
+
     analyzer.analyze();
 
     // delete ast_;

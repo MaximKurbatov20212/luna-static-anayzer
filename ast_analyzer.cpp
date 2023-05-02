@@ -23,16 +23,14 @@ bool ast_analyzer::have_such_code_id(std::map<std::string, std::string>& map,
 
 bool ast_analyzer::analyze() {
     assert(ast_->get_program()->sub_defs != nullptr);
+    bool has_errors;
 
-    // bool has_errors = analyze_shadow_import();
-    // has_errors = analyze_df_redeclaration();
-    // has_errors = analyze_existance_main_cf();
-    // has_errors = analyze_cf_redeclaration();
-
-
-    // return has_errors;
-    analyze_calling_undeclarated_func();
-    return true;
+    has_errors = analyze_shadow_import();
+    has_errors = analyze_df_redeclaration();
+    has_errors = analyze_existance_main_cf();
+    has_errors = analyze_cf_redeclaration();
+    has_errors = analyze_calling_undeclarated_func();
+    return has_errors;
 }
 
 std::vector<ast_analyzer::cf_info<expr *> *> ast_analyzer::get_all_calling(block* block) {
@@ -207,19 +205,12 @@ bool ast_analyzer::analyze_calling_undeclarated_func() {
                         continue;
                     }
 
-                    std::cerr << "nullptr\n";
                     types->push_back(nullptr);
                 }
                 calls.push_back(new cf_info<luna_string *>(cur_cf->alias_, types));
             }
         }
     }
-
-    for (auto i : func_aliases) {
-        std::cerr << i->to_string() << std::endl;
-    }
-
-    std::cerr << "--------------\n";
 
     for (auto i : calls) {
         luna_string*  alias = i->alias_;
@@ -360,7 +351,7 @@ bool ast_analyzer::has_df_redeclaration(std::vector<luna_string* > prev_values, 
         std::string prev_decls;
 
         for (auto line : i.second) {
-            prev_decls += "\tLine " + std::to_string(line) + ": " + get_line_from_file(line);
+            prev_decls += "\tLine " + std::to_string(line) + ": " + get_line_from_file(line) + '\n';
         }
 
         reporter.report(ERROR_LEVEL::ERROR,
@@ -490,7 +481,7 @@ bool ast_analyzer::analyze_shadow_import() {
         std::string prev_decls;
 
         for (auto line : i.second) {
-            prev_decls += "\tLine " + std::to_string(line) + ": " + get_line_from_file(line);
+            prev_decls += "\tLine " + std::to_string(line) + ": " + get_line_from_file(line) + "\n";
         }
 
         reporter.report(ERROR_LEVEL::WARNING,

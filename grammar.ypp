@@ -559,8 +559,12 @@ expr:
 	INT { $$ = $1; } // int
 	| REAL { $$ = $1; } // real 
 	| STRING { $$ = $1; } // string
-	| KW_INT LB expr RB { $$ = new to_int($3); } 
+
+    // int(1.0)
+	| KW_INT LB expr RB { $$ = new to_int($3); } // int
+    // real(1)
 	| KW_REAL LB expr RB  {$$ = new to_real($3); } // real
+    // string()
 	| KW_STRING LB expr RB { $$ = new to_str($3); } // string
 
 	| expr PLUS expr { $$ = new sum($1, $3); } // ??
