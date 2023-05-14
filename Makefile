@@ -1,14 +1,14 @@
 all: bison flex analyzer
 
 flex: lexics.l
-	lex lexics.l
+	lex -o --outfile=lex.yy.cpp lexics.l
 
 bison: grammar.ypp
 	bison -d grammar.ypp
 
-analyzer: grammar.tab.cpp lex.yy.c main.cpp
-	g++ -std=c++11 lex.yy.c grammar.tab.cpp main.cpp ast_analyzer.cpp -o a.out
+analyzer: grammar.tab.cpp lex.yy.cpp main.cpp
+	g++ -std=c++11 lex.yy.cpp grammar.tab.cpp main.cpp ast_analyzer.cpp -o a.out 
 
 clean: 
-	rm grammar.tab.cpp  grammar.tab.hpp lex.yy.c  
+	rm grammar.tab.cpp  grammar.tab.hpp lex.yy.cpp
 

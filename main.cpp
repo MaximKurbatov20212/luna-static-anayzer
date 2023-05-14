@@ -2,6 +2,7 @@
 #include "grammar.tab.hpp"
 #include "ast_analyzer.hpp"
 #include "error_reporter.hpp"
+#include "ast_tester.hpp"
 #include <fstream>
 
 const int EXIT_ERROR = 1;
@@ -34,13 +35,16 @@ int main(int argc, char** argv) {
 
     // std::cerr << ast_->to_string() << std::endl;
 
-    ast_analyzer analyzer = ast_analyzer(ast_, yyin);
+    std::cerr << compare(yyin, ast_) << std::endl;
 
-    std::cerr << "analyze\n";
+    // ast_analyzer analyzer = ast_analyzer(ast_, yyin);
 
-    analyzer.analyze();
+    // std::cerr << "analyze\n";
 
-    // delete ast_;
+    // analyzer.analyze();
+
+    delete ast_;
+    // std::cerr << "delete ast\n";
     fclose(yyin);
     return EXIT_SUCCESS;
 }

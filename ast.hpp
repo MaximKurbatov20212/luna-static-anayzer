@@ -1,7 +1,6 @@
 #ifndef LUNA_AST
 #define LUNA_AST
 
-#include <cstring>
 #include <iostream>
 #include <vector>
 #include <cstring>
@@ -34,6 +33,8 @@ public:
     luna_string() : value_(new std::string()) {}
 
     ~luna_string() {
+        // std::cerr << "luna string dtor\n";
+
         // no delete because tokens_ will be free explicitly. See ~ast()
     }
 
@@ -76,7 +77,7 @@ class param : public virtual_token {
         }
 
         std::string to_string() const override {
-            return type_->to_string() + " " + name_->to_string();
+            return type_ == nullptr ? "nullptr" : type_->to_string() + " " + (name_ == nullptr ? "nullptr" : name_->to_string());
         }
 };
 
@@ -97,10 +98,10 @@ class param_seq : public virtual_token {
         std::string to_string() const override {
             std::string s;
             for (auto i : *params_) {
-                s += i->to_string() + ", ";
+                s += (i == nullptr ? "nullptr" : i->to_string()) + ", ";
             }
-            s.pop_back();
-            s.pop_back();
+            // s.pop_back();
+            // s.pop_back();
             return s;
         }
 };
@@ -137,10 +138,10 @@ class name_seq : public virtual_token {
         std::string to_string() const override {
             std::string s;
             for (auto i : *names_) {
-                s += i->to_string() + ", ";
+                s += (i == nullptr ? "nullptr" : i->to_string()) + ", ";
             }
-            s.pop_back();
-            s.pop_back();
+            // s.pop_back();
+            // s.pop_back();
             return s;
         }
 };
@@ -158,7 +159,7 @@ class dfdecls : public virtual_token {
         }
 
         std::string to_string() const override {
-            return "df " + name_seq_->to_string();
+            return "df " + (name_seq_ == nullptr ? "nullptr" : name_seq_->to_string()) + ";" ;
         }
 };
 
@@ -198,8 +199,7 @@ class statement_seq : public virtual_token {
         std::string to_string() const override {
             std::string s;
             for (auto i : *statements_) {
-                if (i == nullptr) continue;
-                s += i->to_string() + ";\n";
+                s += (i == nullptr ? "nullptr" : i->to_string()) + ";\n";
             }
             return s;
         }
@@ -223,7 +223,7 @@ class behv_pragmas_seq : public virtual_token {
         std::string to_string() const override {
             std::string s;
             for (auto i : *behv_pragma_) {
-                s += i->to_string() + ", ";
+                s += (i == nullptr ? "nullptr" : i->to_string()) + ", ";
             }
             s.pop_back();
             s.pop_back();
@@ -275,9 +275,9 @@ class block : public virtual_token {
             // std::cerr << (opt_behavior_ == nullptr ? "" : opt_behavior_->to_string()) +"\n";
 
             return 
-                opt_dfdecls_->to_string() + "\n" +
-                statement_seq_->to_string() + 
-                opt_behavior_->to_string() +"\n";
+                (opt_dfdecls_ == nullptr ? "nullptr" : opt_dfdecls_->to_string()) + "\n" +
+                (statement_seq_ == nullptr ? "nullptr" : statement_seq_->to_string()) + 
+                (opt_behavior_ == nullptr ? "nullptr" : opt_behavior_->to_string()) +"\n";
         }
 };
 
@@ -298,7 +298,8 @@ class complex_id : public id {
         }
 
         std::string to_string() const override {
-            return id_->to_string() + "[" + expr_->to_string() + "]";
+            return (id_ == nullptr ? "nullptr" : id_->to_string()) 
+                + "[" + (expr_ == nullptr ? "nullptr" : expr_->to_string()) + "]";
         }
 };
 
@@ -312,6 +313,7 @@ class integer : public expr {
         }
 
         std::string to_string() const override {
+            if (value_ == nullptr) return "nullptr";
             return std::to_string(*value_);
         }
 };
@@ -325,6 +327,7 @@ class real : public expr {
         }
 
         std::string to_string() const override {
+            if (value_ == nullptr) return "nullptr";
             return std::to_string(*value_);
         }
 };
@@ -338,7 +341,7 @@ class luna_cast : public expr {
         }
 
         std::string to_string() const override {
-            return expr_->to_string();
+            return expr_ == nullptr ? "nullptr" :expr_->to_string();
         }
 };
 
@@ -372,7 +375,7 @@ class code_df_param : public virtual_token {
         }
 
         std::string to_string() const override {
-            return type_->to_string() + " " + ((code_df_ == nullptr) ? "" : code_df_->to_string());
+            return (type_ == nullptr ? "nullptr" : type_->to_string()) + " " + ((code_df_ == nullptr) ? "" : code_df_->to_string());
         }
 };
 
@@ -393,7 +396,7 @@ public:
         std::string s;
 
         for (auto i : *params_) {
-            s += i->to_string() + ", ";
+            s += (i == nullptr ? "nullptr" :i->to_string()) + ", ";
         }
         s.pop_back();
         s.pop_back();
@@ -412,7 +415,7 @@ class opt_ext_params : public virtual_token {
         }
 
         std::string to_string() const override {
-            return seq_->to_string();
+            return seq_ == nullptr ? "nullptr" :seq_->to_string();
         }
 
 };
@@ -434,7 +437,7 @@ class eq : public bin_op {
         eq(expr *left, expr *right) : bin_op(left, right) {}
 
         std::string to_string() const override {
-            return left_->to_string() + " = " + right_->to_string();
+            return (left_ == nullptr ? "nullptr" : left_->to_string()) + " = " + (right_ == nullptr ? "nullptr" : right_->to_string());
         }
 };
 
@@ -452,7 +455,7 @@ class sum : public bin_op {
         sum(expr *left, expr *right) : bin_op(left, right) {}
 
         std::string to_string() const override {
-            return left_->to_string() + " + " + right_->to_string();
+            return (left_ == nullptr ? "nullptr" : left_->to_string()) + " + " + (right_ == nullptr ? "nullptr" : right_->to_string());
         }
 };
 
@@ -461,7 +464,7 @@ class sub : public bin_op {
         sub(expr *left, expr *right) : bin_op(left, right) {}
 
         std::string to_string() const override {
-            return left_->to_string() + " - " + right_->to_string();
+            return (left_ == nullptr ? "nullptr" : left_->to_string()) + " - " + (right_ == nullptr ? "nullptr" : right_->to_string());
         }
 };
 
@@ -470,7 +473,7 @@ class div1 : public bin_op {
         div1(expr *left, expr *right) : bin_op(left, right) {}
 
         std::string to_string() const override {
-            return left_->to_string() + " \\ " + right_->to_string();
+            return (left_ == nullptr ? "nullptr" : left_->to_string()) + " \\ " + (right_ == nullptr ? "nullptr" : right_->to_string());
         }
 };
 
@@ -479,7 +482,7 @@ class mul : public bin_op {
         mul(expr *left, expr *right) : bin_op(left, right) {}
 
         std::string to_string() const override {
-            return left_->to_string() + " * " + right_->to_string();
+            return (left_ == nullptr ? "nullptr" : left_->to_string()) + " * " + (right_ == nullptr ? "nullptr" : right_->to_string());
         }
 };
 
@@ -488,7 +491,7 @@ class mod : public bin_op {
         mod(expr *left, expr *right) : bin_op(left, right) {}
 
         std::string to_string() const override {
-            return left_->to_string() + " % " + right_->to_string();
+            return (left_ == nullptr ? "nullptr" : left_->to_string()) + " % " + (right_ == nullptr ? "nullptr" : right_->to_string());
         }
 };
 
@@ -497,7 +500,7 @@ class lt : public bin_op {
         lt(expr *left, expr *right) : bin_op(left, right) {}
 
         std::string to_string() const override {
-            return left_->to_string() + " < " + right_->to_string();
+            return (left_ == nullptr ? "nullptr" : left_->to_string()) + " < " + (right_ == nullptr ? "nullptr" : right_->to_string());
         }
 };
 
@@ -506,7 +509,7 @@ class gt : public bin_op {
 
         gt(expr *left, expr *right) : bin_op(left, right) {}
         std::string to_string() const override {
-            return left_->to_string() + " > " + right_->to_string();
+            return (left_ == nullptr ? "nullptr" : left_->to_string()) + " > " + (right_ == nullptr ? "nullptr" : right_->to_string());
         }
 };
 
@@ -515,7 +518,7 @@ class leq : public bin_op {
         leq(expr *left, expr *right) : bin_op(left, right) {}
 
         std::string to_string() const override {
-            return left_->to_string() + " <= " + right_->to_string();
+            return (left_ == nullptr ? "nullptr" : left_->to_string()) + " <= " + (right_ == nullptr ? "nullptr" : right_->to_string());
         }
 };
 
@@ -524,7 +527,7 @@ class geq : public bin_op {
         geq(expr *left, expr *right) : bin_op(left, right) {}
 
         std::string to_string() const override {
-            return left_->to_string() + " >= " + right_->to_string();
+            return (left_ == nullptr ? "nullptr" : left_->to_string()) + " >= " + (right_ == nullptr ? "nullptr" : right_->to_string());
         }
 };
 
@@ -533,7 +536,7 @@ class dbleq : public bin_op {
         dbleq(expr *left, expr *right) : bin_op(left, right) {}
 
         std::string to_string() const override {
-            return left_->to_string() + "==" + right_->to_string();
+            return (left_ == nullptr ? "nullptr" : left_->to_string()) + " == " + (right_ == nullptr ? "nullptr" : right_->to_string());
         }
 };
 
@@ -541,18 +544,26 @@ class neq : public bin_op {
     public:
         neq(expr *left, expr *right) : bin_op(left, right) {}
         std::string to_string() const override {
-            return left_->to_string() + "!=" + right_->to_string();
+            return (left_ == nullptr ? "nullptr" : left_->to_string()) + " != " + (right_ == nullptr ? "nullptr" : right_->to_string());
         }
 };
 
 class dblamp : public bin_op {
     public:
         dblamp(expr *left, expr *right) : bin_op(left, right) {}
+
+        std::string to_string() const override {
+            return (left_ == nullptr ? "nullptr" : left_->to_string()) + " && " + (right_ == nullptr ? "nullptr" : right_->to_string());
+        }
 };
 
 class dblpipe : public bin_op {
     public:
         dblpipe(expr *left, expr *right) : bin_op(left, right) {}
+
+        std::string to_string() const override {
+            return (left_ == nullptr ? "nullptr" : left_->to_string()) + " || " + (right_ == nullptr ? "nullptr" : right_->to_string());
+        }
 };
 
 class sub_def : public virtual_token {
@@ -578,10 +589,10 @@ class program : public virtual_token {
         std::string to_string() const override {
             std::string res;
             for (auto i : *sub_defs) {
-                if (i == nullptr) continue;
-                res += i->to_string() + '\n';
+                // if (i == nullptr) continue;
+                res += (i == nullptr ? "nullptr" : i->to_string()) + '\n';
             }
-            res.pop_back();
+            // res.pop_back();
             return res;
         }
 };
@@ -603,8 +614,8 @@ class control_pragma : public virtual_token {
             s += where_type_->to_string();
 
             for (auto i : *expr_) {
-                if (i == nullptr) continue;
-                s += i->to_string() + '\n';
+                // if (i == nullptr) continue;
+                s += (i == nullptr ? "nullptr" :i->to_string()) + '\n';
             }
             s.pop_back();
             return s;
@@ -646,9 +657,9 @@ class luna_sub_def : public sub_def {
             // // std::cerr << block_->to_string() << std::endl;
             // // std::cerr << control_pragma_->to_string() << std::endl;
 
-            return "sub " + code_id_->to_string() + 
-                "(" + params_->to_string() + ") {\n" +
-                block_->to_string() + "}\n" +
+            return "sub " + (code_id_ == nullptr ? "nullptr" : code_id_->to_string()) + 
+                "(" + (params_ == nullptr ? "nullptr" :params_->to_string()) + ") {\n" +
+                (block_ == nullptr ? "nullptr" : block_->to_string()) + "}\n" +
                 (control_pragma_ == nullptr ? "" : control_pragma_->to_string()); 
         }
 };
@@ -669,13 +680,19 @@ class import : public sub_def {
                         luna_code_id_(new luna_string()) {}
 
         ~import() {
+            // std::cerr << "dtor:" << cxx_code_id_ << std::endl;
             delete cxx_code_id_;
+            // std::cerr << "dtor1\n";
             delete params_;
+            // std::cerr << "dtor2\n";
             delete luna_code_id_;
         }
 
         std::string to_string() const override {
-            return "import " + cxx_code_id_->to_string() + "(" + params_->to_string() + ") as " + luna_code_id_->to_string() + options_ + ";";
+            return "import " + (cxx_code_id_ == nullptr ? "nullptr" : cxx_code_id_->to_string())
+            + "(" + (params_ == nullptr ? "nullptr" : params_->to_string())
+            + ") as " + (luna_code_id_ == nullptr ? "nullptr" : luna_code_id_->to_string())
+            + options_ + ";";
         }
 };
 
@@ -706,7 +723,6 @@ class cxx_block_def : public sub_def {
 class if_statement : public statement {
     public:
         expr *expr_;
-        // block *block_;
         if_statement(expr *expr, block *block) :  expr_(expr) {
             block_ = block;
         }
@@ -717,8 +733,8 @@ class if_statement : public statement {
         }
 
         std::string to_string() const override {
-            return "if " + expr_->to_string() + "{" +
-            block_->to_string() + "}\n";
+            return "if " + (expr_ == nullptr ? "nullptr" :expr_->to_string()) + "{\n" +
+                (block_ == nullptr ? "nullptr" : block_->to_string()) + "}";
         }
 };
 
@@ -754,10 +770,10 @@ class for_statement : public statement {
 
             return 
                 "for " +
-                name_->to_string() + 
+                (name_ == nullptr ? "nullptr" :name_->to_string()) + 
                 "=" +
-                expr_1_->to_string() + ".." + expr_2_->to_string() + "{\n" +
-                block_->to_string() + "}\n" +
+                (expr_1_ == nullptr ? "nullptr" :expr_1_->to_string()) + ".." + (expr_2_ == nullptr ? "nullptr" :expr_2_->to_string()) + "{\n" +
+                (block_ == nullptr ? "nullptr" :block_->to_string()) + "}\n" +
                 (control_pragma_ == nullptr ? "" : control_pragma_->to_string());
         }
 };
@@ -841,12 +857,14 @@ class while_statement : public statement {
 
         std::string to_string() const override {
             return 
+                "while (" +
                 (control_pragma_ == nullptr ? "" : control_pragma_->to_string()) +
-                left_->to_string() +
-                expr_->to_string() +
-                right_->to_string() +
-                block_->to_string() +
-                id_->to_string();
+                (left_ == nullptr ? "nullptr" :left_->to_string()) +
+                (expr_ == nullptr ? "nullptr" :expr_->to_string()) +
+                (right_ == nullptr ? "nullptr" :right_->to_string()) +
+                ")" +
+                (block_ == nullptr ? "nullptr" :block_->to_string()) +
+                (id_ == nullptr ? "nullptr" :id_->to_string());
         }
 };
 
@@ -866,8 +884,8 @@ class exprs_seq : public virtual_token {
         std::string to_string() const override {
             std::string s;
             for (auto i : *expr_) {
-                if (i == nullptr) continue;
-                s += i->to_string() + ',';
+                // if (i == nullptr) continue;
+                s += (i == nullptr ? "nullptr" :i->to_string()) + ',';
             }
             s.pop_back();
             return s;
@@ -914,7 +932,7 @@ public:
 
     std::string to_string() const override {
         if (id_ == nullptr) return "";
-        return id_->to_string();
+        return "cf " + id_->to_string() + ":";
     }
 };
 
@@ -967,12 +985,12 @@ public:
     std::string to_string() const override {
         
         return 
-            opt_label_->to_string() + " " +
-            code_id_->to_string() + "(" +
-            opt_exprs_->to_string() + ")" +
-            opt_setdf_rules_->to_string() +
-            opt_rules_->to_string() + 
-            opt_behavior_->to_string();
+            (opt_label_ == nullptr ? "nullptr" : opt_label_->to_string()) + " " +
+            (code_id_ == nullptr ? "nullptr" : code_id_->to_string()) + "(" +
+            (opt_exprs_ == nullptr ? "nullptr" :opt_exprs_->to_string()) + ")" +
+            (opt_setdf_rules_ == nullptr ? "nullptr" :opt_setdf_rules_->to_string()) +
+            (opt_rules_ == nullptr ? "nullptr" :opt_rules_->to_string()) + 
+            (opt_behavior_ == nullptr ? "nullptr" :opt_behavior_->to_string());
     }
 };
 
